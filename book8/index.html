@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hit the 60s — Book 8</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    :root {
+      --navy: #1F3864;
+      --blue: #2E75B6;
+      --red: #C00000;
+      --green: #00B050;
+      --gold: #F4A800;
+      --bg: #F0F4FA;
+      --card: #FFFFFF;
+      --text: #1a1a2e;
+      --muted: #6c757d;
+      --border: #dbe2ef;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--navy);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    header h1 { color: #fff; font-size: 18px; font-weight: 700; }
+    header span { color: #94A3B8; font-size: 13px; margin-left: auto; }
+    .container { max-width: 680px; margin: 0 auto; padding: 24px 16px 60px; }
+    #selector { text-align: center; padding: 40px 20px; }
+    #selector h2 { font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    #selector p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+    .test-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-width: 400px; margin: 0 auto; }
+    .test-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .test-btn:hover { border-color: var(--blue); background: #EEF4FF; transform: translateY(-2px); }
+    .test-btn .num { font-size: 24px; font-weight: 800; color: var(--navy); }
+    .test-btn .lbl { font-size: 10px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    #quiz { display: none; }
+    .quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .back-btn { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 14px; font-weight: 600; padding: 6px 0; }
+    .quiz-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .quiz-sub { font-size: 12px; color: var(--muted); margin-left: auto; }
+    .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 24px; }
+    .progress-bar { background: var(--blue); height: 100%; width: 0%; transition: width 0.3s ease; }
+    .q-card { background: var(--card); border-radius: 16px; padding: 28px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .q-meta { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+    .q-text { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 24px; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      background: var(--bg);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--blue); background: #EEF4FF; }
+    .opt-btn.correct { background: #E6F9ED !important; border-color: var(--green) !important; color: #00662E; font-weight: 700; }
+    .opt-btn.wrong { background: #FDE8E8 !important; border-color: var(--red) !important; color: #8B0000; font-weight: 700; }
+    .opt-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .opt-btn.correct .opt-letter { background: var(--green); color: #fff; border-color: var(--green); }
+    .opt-btn.wrong .opt-letter { background: var(--red); color: #fff; border-color: var(--red); }
+    .quiz-nav { display: flex; justify-content: space-between; align-items: center; }
+    .nav-btn {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.9; }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    #results { display: none; text-align: center; }
+    .result-card { background: var(--card); border-radius: 20px; padding: 36px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .result-emoji { font-size: 48px; margin-bottom: 12px; }
+    .result-score { font-size: 52px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .result-label { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .result-badge { display: inline-block; padding: 6px 18px; border-radius: 99px; font-size: 14px; font-weight: 800; margin-bottom: 16px; }
+    .result-badge.pass { background: #E6F9ED; color: #00662E; }
+    .result-badge.fail { background: #FDE8E8; color: #8B0000; }
+    .result-msg { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .review-list { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left; }
+    .review-list h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 14px; text-transform: uppercase; }
+    .review-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .review-item:last-child { border-bottom: none; }
+    .review-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .review-q { font-size: 13px; color: var(--text); flex: 1; }
+    .review-ans { font-size: 12px; font-weight: 600; }
+    .review-ans.wrong { color: var(--red); }
+    .review-ans.correct { color: var(--green); }
+    .result-actions { display: flex; flex-direction: column; gap: 10px; }
+    .action-btn { padding: 15px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; text-align: center; }
+    .action-btn.primary { background: var(--navy); color: #fff; }
+    .action-btn.primary:hover { background: var(--blue); }
+    .action-btn.outline { background: none; border: 2px solid var(--border); color: var(--muted); }
+    .action-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+    .page-footer { text-align: center; margin-top: 40px; padding: 16px 0; }
+    .footer-text { font-size: 13px; font-weight: 700; color: #800020; line-height: 1.6; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-badge">HIT THE 60s</div>
+    <h1>Book 8 — Practice Tests</h1>
+    <span>ALC Prep Course</span>
+  </header>
+  <div class="container">
+    <div id="selector">
+      <h2>Book Eight</h2>
+      <p>Choose a test to begin. Pass score: 24 / 30 (80%)</p>
+      <div class="test-grid">
+        <button class="test-btn" onclick="startTest(0)"><span class="num">1</span><span class="lbl">Test 1</span></button>
+        <button class="test-btn" onclick="startTest(1)"><span class="num">2</span><span class="lbl">Test 2</span></button>
+        <button class="test-btn" onclick="startTest(2)"><span class="num">3</span><span class="lbl">Test 3</span></button>
+        <button class="test-btn" onclick="startTest(3)"><span class="num">4</span><span class="lbl">Test 4</span></button>
+        <button class="test-btn" onclick="startTest(4)"><span class="num">5</span><span class="lbl">Test 5</span></button>
+      </div>
+    </div>
+    <div id="quiz">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="backToSelector()">← Back to Tests</button>
+        <div class="quiz-title" id="quizTitle">Test 1</div>
+        <div class="quiz-sub" id="quizSub">Q1 of 30</div>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="q-card">
+        <div class="q-meta" id="qMeta">Question 1</div>
+        <div class="q-text" id="qText">Question text goes here...</div>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevQ()">← Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQ()">Next →</button>
+      </div>
+    </div>
+    <div id="results">
+      <div class="result-card">
+        <div class="result-emoji" id="resultEmoji">🎯</div>
+        <div class="result-score" id="resultScore">0</div>
+        <div class="result-label">out of 30 questions</div>
+        <div class="result-badge" id="resultBadge">PASSED</div>
+        <div class="result-msg" id="resultMsg">Great job!</div>
+      </div>
+      <div class="review-list" id="reviewList"></div>
+      <div class="result-actions">
+        <button class="action-btn primary" onclick="retryTest()">Try Again</button>
+        <button class="action-btn outline" onclick="backToSelector()">Choose Another Test</button>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="footer-text">Prepared by Khalid Alameer &nbsp;|&nbsp; Western Naval Aviation Group &nbsp;|</div>
+      <div class="footer-text">"Hit the 60s"</div>
+    </div>
+  </div>
+  <script>
+    const BOOK_TITLE = "Book 8";
+    const TESTS = [
+      {
+        title: "Test 1",
+        questions: [
+          { q: "The flight crew __ execute pre-flight safety checks immediately.", a: "must", b: "might", c: "could", d: "would", ans: "a" },
+          { q: "He __ calibrating the altimeter when the warning sounded.", a: "was", b: "is", c: "has been", d: "will be", ans: "a" },
+          { q: "The mission was aborted __ unexpected thunderstorm activity.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
+          { q: "If the mechanics __ the repair early, the jet will launch today.", a: "finish", b: "finished", c: "will finish", d: "finishing", ans: "a" },
+          { q: "This is the flight officer __ leads the naval squadron.", a: "who", b: "whom", c: "whose", d: "which", ans: "a" },
+          { q: "We must __ all electrical circuits before powering up.", a: "inspect", b: "inspection", c: "inspecting", d: "inspected", ans: "a" },
+          { q: "The new navigation system is __ reliable than the previous model.", a: "more", b: "most", c: "much", d: "many", ans: "a" },
+          { q: "The technician hasn't completed the radio check __.", a: "yet", b: "already", c: "still", d: "just", ans: "a" },
+          { q: "They have been training in this hangar __ three weeks.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
+          { q: "Make sure to turn __ the main fuel valve before leaving.", a: "off", b: "out", c: "down", d: "away", ans: "a" },
+          { q: "There isn't __ hydraulic fluid remaining in the reserve tank.", a: "any", b: "some", c: "many", d: "few", ans: "a" },
+          { q: "The ground crew repaired the landing gear __.", a: "efficiently", b: "efficient", c: "efficiency", d: "more efficient", ans: "a" },
+          { q: "Pilots must avoid __ through severe turbulence when possible.", a: "flying", b: "to fly", c: "fly", d: "flew", ans: "a" },
+          { q: "He was transferred __ the aviation maintenance division.", a: "to", b: "at", c: "in", d: "for", ans: "a" },
+          { q: "The commanding officer instructed the crew __ standby.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
+          { q: "Neither the commander __ his deputy approved the change.", a: "nor", b: "or", c: "and", d: "but", ans: "a" },
+          { q: "She presents technical briefings very __.", a: "well", b: "good", c: "best", d: "better", ans: "a" },
+          { q: "The fleet conducted drills __ the night maneuvers.", a: "during", b: "while", c: "since", d: "for", ans: "a" },
+          { q: "The flight arrived precisely __ schedule.", a: "on", b: "in", c: "at", d: "by", ans: "a" },
+          { q: "He inquired __ the runway conditions were clear.", a: "whether", b: "what", c: "that", d: "which", ans: "a" },
+          { q: "We look forward to __ the upgraded radar equipment.", a: "testing", b: "test", c: "tested", d: "to test", ans: "a" },
+          { q: "Heavy crosswinds prevented the helicopter __ landing on deck.", a: "from", b: "to", c: "of", d: "with", ans: "a" },
+          { q: "The pilot landed the aircraft __ despite low visibility.", a: "safely", b: "safe", c: "safety", d: "safest", ans: "a" },
+          { q: "I would rather __ the system check right now.", a: "complete", b: "completing", c: "to complete", d: "completed", ans: "a" },
+          { q: "All naval personnel must strictly adhere to safety __.", a: "protocols", b: "protocolling", c: "protocolled", d: "proto", ans: "a" },
+          { q: "He received an award __ his outstanding service record.", a: "because of", b: "because", c: "due", d: "despite", ans: "a" },
+          { q: "There are __ defects in this batch of equipment than expected.", a: "fewer", b: "less", c: "little", d: "few", ans: "a" },
+          { q: "The squadron has __ completed its overseas tour.", a: "just", b: "yet", c: "still", d: "ever", ans: "a" },
+          { q: "Safety guidelines must be strictly __ by all staff.", a: "followed", b: "following", c: "follow", d: "follows", ans: "a" },
+          { q: "If he __ the warning light earlier, the emergency could have been prevented.", a: "had noticed", b: "noticed", c: "notices", d: "will notice", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 2",
+        questions: [
+          { q: "The instructor directed us __ the checklist line by line.", a: "to follow", b: "following", c: "follow", d: "followed", ans: "a" },
+          { q: "Lieutenant Adams is responsible __ flight deck operations.", a: "for", b: "about", c: "with", d: "at", ans: "a" },
+          { q: "The power failed while they __ the turbine engines.", a: "were testing", b: "test", c: "tested", d: "are testing", ans: "a" },
+          { q: "How __ fuel is required for the return flight?", a: "much", b: "many", c: "few", d: "several", ans: "a" },
+          { q: "The entire wing __ to the new air base next week.", a: "will relocate", b: "relocated", c: "relocate", d: "relocating", ans: "a" },
+          { q: "Personnel __ wear ear protection near active engines.", a: "must", b: "might", c: "could", d: "would", ans: "a" },
+          { q: "The radio transmission was disrupted, __ we used flares.", a: "so", b: "because", c: "but", d: "although", ans: "a" },
+          { q: "This is the __ crucial flight check of the training cycle.", a: "most", b: "more", c: "much", d: "great", ans: "a" },
+          { q: "The flight report was turned in __ time.", a: "on", b: "in", c: "at", d: "for", ans: "a" },
+          { q: "They haven't __ the landing gear assembly yet.", a: "inspected", b: "inspect", c: "inspecting", d: "inspects", ans: "a" },
+          { q: "He works __ senior maintenance supervisor.", a: "as", b: "like", c: "same", d: "so", ans: "a" },
+          { q: "If pressure drops rapidly, the warning chime __.", a: "will sound", b: "sounded", c: "is sounding", d: "was sound", ans: "a" },
+          { q: "She communicates __ than her predecessor.", a: "more clearly", b: "clear", c: "clearly", d: "most clear", ans: "a" },
+          { q: "The jet was refueled __ the brief stopover.", a: "during", b: "while", c: "for", d: "since", ans: "a" },
+          { q: "You ought __ recheck the torque specifications.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
+          { q: "There were __ aviators attending the morning briefing.", a: "many", b: "much", c: "little", d: "any", ans: "a" },
+          { q: "The formation will take place __ 0730 hours.", a: "at", b: "in", c: "on", d: "by", ans: "a" },
+          { q: "He apologized __ omitting the calibration log.", a: "for", b: "about", c: "at", d: "on", ans: "a" },
+          { q: "The fuselage was inspected __ certified mechanics.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
+          { q: "Are you familiar __ emergency ejection procedures?", a: "with", b: "about", c: "for", d: "to", ans: "a" },
+          { q: "He decided __ his flight contract for another term.", a: "to extend", b: "extending", c: "extend", d: "extended", ans: "a" },
+          { q: "The admiral was impressed __ the squadron's performance.", a: "by", b: "for", c: "with", d: "on", ans: "a" },
+          { q: "She hasn't trained in the flight simulator __ last month.", a: "since", b: "for", c: "during", d: "from", ans: "a" },
+          { q: "The anomaly appeared prominently __ the radar display.", a: "on", b: "in", c: "at", d: "to", ans: "a" },
+          { q: "You had better __ your oxygen mask before high altitude flight.", a: "check", b: "to check", c: "checking", d: "checked", ans: "a" },
+          { q: "The unit failed the test because they __ follow standard procedures.", a: "didn't", b: "doesn't", c: "wasn't", d: "haven't", ans: "a" },
+          { q: "This tool is used __ adjusting engine valves.", a: "for", b: "to", c: "with", d: "by", ans: "a" },
+          { q: "The pilot landed successfully __ severe instrument failure.", a: "despite", b: "although", c: "because of", d: "even though", ans: "a" },
+          { q: "He was commended __ his swift action during the emergency.", a: "for", b: "about", c: "at", d: "on", ans: "a" },
+          { q: "By next week, the team __ all maintenance requirements.", a: "will have completed", b: "completed", c: "will complete", d: "complete", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 3",
+        questions: [
+          { q: "The trainees __ instructed on emergency exit doors.", a: "were", b: "was", c: "are", d: "have been", ans: "a" },
+          { q: "He avoids __ unverified maintenance procedures.", a: "using", b: "to use", c: "use", d: "used", ans: "a" },
+          { q: "She received recognition __ her innovative flight design.", a: "for", b: "about", c: "with", d: "on", ans: "a" },
+          { q: "If we depart at sunrise, we __ land before mid-day.", a: "will", b: "would", c: "did", d: "had", ans: "a" },
+          { q: "The maintenance log was signed __ the chief crew member.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
+          { q: "He is interested __ specializing in jet engine overhaul.", a: "in", b: "on", c: "at", d: "about", ans: "a" },
+          { q: "There are __ spare batteries left in storage.", a: "several", b: "much", c: "little", d: "any", ans: "a" },
+          { q: "Always verify power is off __ opening control panels.", a: "before", b: "while", c: "until", d: "since", ans: "a" },
+          { q: "The commander expressed __ with the team's efficiency.", a: "satisfaction", b: "satisfy", c: "satisfied", d: "satisfying", ans: "a" },
+          { q: "The new turbine runs __ smoother than the old model.", a: "much", b: "more", c: "very", d: "too", ans: "a" },
+          { q: "The helicopter landed __ the designated pad.", a: "on", b: "in", c: "to", d: "at", ans: "a" },
+          { q: "He promised __ the safety inspection report today.", a: "to submit", b: "submitting", c: "submit", d: "submitted", ans: "a" },
+          { q: "Neither weather __ radio jamming delayed the operation.", a: "nor", b: "or", c: "and", d: "but", ans: "a" },
+          { q: "Crew members were warned __ approaching active propellers.", a: "against", b: "from", c: "about", d: "for", ans: "a" },
+          { q: "The flight proceeded smoothly __ minor air turbulence.", a: "despite", b: "although", c: "because of", d: "since", ans: "a" },
+          { q: "The pilot maneuvered the jet __ through the fog.", a: "carefully", b: "careful", c: "carelessness", d: "careless", ans: "a" },
+          { q: "The officer has been on watch duty __ 0400.", a: "since", b: "for", c: "during", d: "from", ans: "a" },
+          { q: "The debriefing will take place __ Conference Room B.", a: "in", b: "on", c: "at", d: "to", ans: "a" },
+          { q: "He succeeded due to his thorough __ of aerodynamics.", a: "knowledge", b: "know", c: "knowing", d: "knowledgeable", ans: "a" },
+          { q: "Keep the fire safety gear __ reach at all times.", a: "within", b: "inside", c: "on", d: "at", ans: "a" },
+          { q: "If I __ in your position, I would double-check the calculations.", a: "were", b: "was", c: "am", d: "been", ans: "a" },
+          { q: "The officer suggested __ the flight test tomorrow.", a: "rescheduling", b: "to reschedule", c: "reschedule", d: "rescheduled", ans: "a" },
+          { q: "The forecaster expects __ clear skies over the airfield.", a: "no article", b: "a", c: "an", d: "the", ans: "a" },
+          { q: "The jet accelerated __ fast that it passed radar coverage.", a: "so", b: "too", c: "very", d: "such", ans: "a" },
+          { q: "The work order must be signed __ the lead technician.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
+          { q: "She is capable __ handling complex tactical scenarios.", a: "of", b: "in", c: "at", d: "for", ans: "a" },
+          { q: "They have been deployed at sea __ four consecutive months.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
+          { q: "The flight surgeon advised him __ rest after long flights.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
+          { q: "He exited the aircraft without __ his helmet off.", a: "taking", b: "take", c: "took", d: "to take", ans: "a" },
+          { q: "This updated system is __ superior to the previous version.", a: "far", b: "more", c: "most", d: "very", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 4",
+        questions: [
+          { q: "The squad congratulated Captain Smith __ his leadership award.", a: "on", b: "for", c: "about", d: "at", ans: "a" },
+          { q: "He was held accountable __ the equipment oversight.", a: "for", b: "about", c: "with", d: "to", ans: "a" },
+          { q: "The landing systems were tested __ prior to deployment.", a: "thoroughly", b: "thorough", c: "thoroughness", d: "more thorough", ans: "a" },
+          { q: "If the fuel gauge __ abnormal readings, alert the tower.", a: "shows", b: "showed", c: "will show", d: "showing", ans: "a" },
+          { q: "The officer insists __ executing every procedure precisely.", a: "on", b: "in", c: "at", d: "for", ans: "a" },
+          { q: "The flight manual was detailed enough for recruits __.", a: "to understand", b: "understanding", c: "understand", d: "understood", ans: "a" },
+          { q: "Naval aviators are accustomed __ strict operational routines.", a: "to", b: "with", c: "at", d: "for", ans: "a" },
+          { q: "The departure was delayed due __ line maintenance.", a: "to", b: "for", c: "with", d: "at", ans: "a" },
+          { q: "The engine noise was so loud that I could __ hear instructions.", a: "barely", b: "clearly", c: "easily", d: "hard", ans: "a" },
+          { q: "He prefers direct communication __ written memos.", a: "to", b: "than", c: "over", d: "from", ans: "a" },
+          { q: "The repair crew finished the overhaul __ schedule.", a: "ahead of", b: "before of", c: "in front of", d: "earlier to", ans: "a" },
+          { q: "He was penalized for __ violating aviation safety rules.", a: "intentionally", b: "intentional", c: "intention", d: "intend", ans: "a" },
+          { q: "They completed the night flight __ any complications.", a: "without", b: "with no", c: "less", d: "lacking", ans: "a" },
+          { q: "The lead instructor advised us __ focused during flight.", a: "to stay", b: "staying", c: "stay", d: "stayed", ans: "a" },
+          { q: "The pilot has been absent __ briefings this week.", a: "from", b: "at", c: "in", d: "to", ans: "a" },
+          { q: "He overlooked the oil indicator, __ the engine overheated.", a: "so", b: "because", c: "but", d: "although", ans: "a" },
+          { q: "The generator stopped because it ran __ lubricant.", a: "out of", b: "away from", c: "off with", d: "down from", ans: "a" },
+          { q: "She was surprised __ the sudden order to deploy.", a: "by", b: "for", c: "with", d: "on", ans: "a" },
+          { q: "This naval air station is famous __ its safety record.", a: "for", b: "about", c: "with", d: "in", ans: "a" },
+          { q: "The maintenance report was approved __ the chief inspector.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
+          { q: "She stepped onto the flight deck without __ proper safety gear.", a: "wearing", b: "wear", c: "wore", d: "to wear", ans: "a" },
+          { q: "Weather conditions were poor; __, the mission proceeded.", a: "nevertheless", b: "therefore", c: "because", d: "so", ans: "a" },
+          { q: "Proper maintenance prevents mechanical failure __ occurring.", a: "from", b: "to", c: "of", d: "with", ans: "a" },
+          { q: "The technician had no difficulty __ diagnosing the electrical fault.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
+          { q: "The technician gave a complete __ of the engine defect.", a: "description", b: "describe", c: "descriptive", d: "describingly", ans: "a" },
+          { q: "The flight was grounded __ severe icy conditions.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
+          { q: "The crew was eager __ test the new jet engine.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
+          { q: "The radar unit was calibrated __ senior engineers.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
+          { q: "The commander was satisfied __ the flight performance.", a: "with", b: "at", c: "for", d: "on", ans: "a" },
+          { q: "They canceled the air exercise __ hurricane warnings.", a: "due to", b: "because", c: "since", d: "as", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 5",
+        questions: [
+          { q: "The flight chief ordered the team to __ radio silence.", a: "maintain", b: "maintaining", c: "maintained", d: "maintenance", ans: "a" },
+          { q: "The pilot was accused __ disregarding safety limits.", a: "of", b: "for", c: "with", d: "about", ans: "a" },
+          { q: "The flight results were much better than we __.", a: "had expected", b: "expecting", c: "expect", d: "expects", ans: "a" },
+          { q: "He speaks about naval tactics as if he __ decades of experience.", a: "had", b: "has", c: "have", d: "having", ans: "a" },
+          { q: "The aviation safety board published __ official findings.", a: "its", b: "it's", c: "their", d: "they're", ans: "a" },
+          { q: "The crew succeeded __ landing the transport jet safely.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
+          { q: "The recruits were astonished __ the speed of the aircraft.", a: "at", b: "with", c: "for", d: "in", ans: "a" },
+          { q: "Flight operations are suspended __ further notice.", a: "until", b: "since", c: "for", d: "at", ans: "a" },
+          { q: "He refused __ the order without written confirmation.", a: "to execute", b: "executing", c: "execute", d: "executed", ans: "a" },
+          { q: "She has been working as a naval aviator __ six years.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
+          { q: "The tactical plan was endorsed __ high command.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
+          { q: "He answered all questions with complete __ during debriefing.", a: "confidence", b: "confident", c: "confidently", d: "confide", ans: "a" },
+          { q: "She avoided __ any tactical errors in the simulator.", a: "making", b: "to make", c: "make", d: "made", ans: "a" },
+          { q: "The mission was completed __ extreme weather hazards.", a: "despite", b: "although", c: "even though", d: "because", ans: "a" },
+          { q: "He was warned __ operating equipment without clearance.", a: "against", b: "from", c: "about", d: "for", ans: "a" },
+          { q: "She performs under pressure exceptionally __.", a: "well", b: "good", c: "best", d: "better", ans: "a" },
+          { q: "They postponed the flight __ mechanical concerns.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
+          { q: "The captain was pleased __ the crew's readiness.", a: "with", b: "at", c: "for", d: "on", ans: "a" },
+          { q: "All sensitive documents must be stored __ secure lockers.", a: "in", b: "on", c: "at", d: "to", ans: "a" },
+          { q: "He is not only highly skilled __ also remarkably calm.", a: "but", b: "and", c: "or", d: "so", ans: "a" },
+          { q: "The aircraft passed through radar zones without __ identified.", a: "being", b: "be", c: "been", d: "to be", ans: "a" },
+          { q: "Alarms sounded __ ground crews to clear the flight deck.", a: "to alert", b: "alerting", c: "alert", d: "alerted", ans: "a" },
+          { q: "Keep the cockpit instruments clean and __.", a: "organized", b: "organize", c: "organizing", d: "organization", ans: "a" },
+          { q: "They have been stationed at this naval base __ 2020.", a: "since", b: "for", c: "from", d: "during", ans: "a" },
+          { q: "The recruit entered the control tower without __ permission.", a: "asking", b: "ask", c: "asked", d: "to ask", ans: "a" },
+          { q: "The jet engines were inspected __ every flight.", a: "before", b: "while", c: "during", d: "until", ans: "a" },
+          { q: "She demonstrated outstanding leadership __ the crisis.", a: "during", b: "while", c: "for", d: "since", ans: "a" },
+          { q: "He is qualified __ operate supersonic aircraft.", a: "to", b: "for", c: "at", d: "in", ans: "a" },
+          { q: "They completed the survival exercise __ no casualties.", a: "with", b: "by", c: "from", d: "for", ans: "a" },
+          { q: "The flight operation was rated successful __ all criteria.", a: "by", b: "with", c: "at", d: "on", ans: "a" }
+        ]
+      }
+    ];
+
+    let currentTest = 0, currentQ = 0, answers = [], answered = [];
+
+    function startTest(idx) {
+      currentTest = idx;
+      currentQ = 0;
+      const qCount = TESTS[idx].questions.length;
+      answers = new Array(qCount).fill(null);
+      answered = new Array(qCount).fill(false);
+      document.getElementById('selector').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      document.getElementById('quizTitle').textContent = ⁠ Book 8 — ${TESTS[idx].title} ⁠;
+      renderQ();
+    }
+
+    function renderQ() {
+      const qData = TESTS[currentTest].questions[currentQ];
+      const total = TESTS[currentTest].questions.length;
+      document.getElementById('quizSub').textContent = ⁠ Q${currentQ + 1} of ${total} ⁠;
+      document.getElementById('qMeta').textContent = ⁠ Question ${currentQ + 1} ⁠;
+      document.getElementById('qText').textContent = qData.q;
+      document.getElementById('progressBar').style.width = ⁠ ${((currentQ + 1) / total) * 100}% ⁠;
+      const opts = [
+        { key: 'a', text: qData.a },
+        { key: 'b', text: qData.b },
+        { key: 'c', text: qData.c },
+        { key: 'd', text: qData.d }
+      ];
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        if (answered[currentQ]) {
+          btn.disabled = true;
+          if (opt.key === qData.ans) btn.classList.add('correct');
+          else if (answers[currentQ] === opt.key) btn.classList.add('wrong');
+        } else {
+          btn.onclick = () => selectAnswer(opt.key);
+        }
+        btn.innerHTML = ⁠ <span class="opt-letter">${opt.key.toUpperCase()}</span><span>${opt.text}</span> ⁠;
+        container.appendChild(btn);
+      });
+      document.getElementById('prevBtn').disabled = currentQ === 0;
+      document.getElementById('nextBtn').textContent = currentQ === total - 1 ? 'Finish →' : 'Next →';
+    }
+
+    function selectAnswer(letter) {
+      if (answered[currentQ]) return;
+      answers[currentQ] = letter;
+      answered[currentQ] = true;
+      renderQ();
+    }
+
+    function nextQ() {
+      const total = TESTS[currentTest].questions.length;
+      if (!answered[currentQ]) {
+        alert('Please select an answer before moving forward.');
+        return;
+      }
+      if (currentQ < total - 1) {
+        currentQ++;
+        renderQ();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) {
+        currentQ--;
+        renderQ();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+      const qList = TESTS[currentTest].questions;
+      let score = 0;
+      const wrongs = [];
+      qList.forEach((q, i) => {
+        if (answers[i] === q.ans) score++;
+        else wrongs.push({ idx: i + 1, q: q.q, userAns: answers[i], correctAns: q.ans, correctText: q[q.ans] });
+      });
+      const pass = score >= 24;
+      document.getElementById('resultScore').textContent = score;
+      const badge = document.getElementById('resultBadge');
+      badge.textContent = pass ? 'PASSED' : 'NOT PASSED';
+      badge.className = ⁠ result-badge ${pass ? 'pass' : 'fail'} ⁠;
+      document.getElementById('resultMsg').textContent = pass
+        ? 'Excellent! You reached the passing score for Book 8.'
+        : 'Keep practicing! Review your mistakes below and try again.';
+      document.getElementById('resultEmoji').textContent = pass ? '🎉' : '📚';
+      const rList = document.getElementById('reviewList');
+      if (wrongs.length === 0) {
+        rList.innerHTML = '<h3>Review</h3><p style="color:var(--green);font-size:14px;">Perfect score! No mistakes.</p>';
+      } else {
+        rList.innerHTML = ⁠ <h3>Mistakes to Review (${wrongs.length})</h3> ⁠ +
+          wrongs.map(w => `
+            <div class="review-item">
+              <span class="review-icon">❌</span>
+              <div class="review-q"><b>Q${w.idx}:</b> ${w.q}<br>
+                <span class="review-ans wrong">Your answer: ${w.userAns ? w.userAns.toUpperCase() : 'None'}</span> | 
+                <span class="review-ans correct">Correct: ${w.correctAns.toUpperCase()} (${w.correctText})</span>
+              </div>
+            </div>
+          `).join('');
+      }
+    }
+
+    function retryTest() { startTest(currentTest); }
+    function backToSelector() {
+      document.getElementById('selector').style.display = 'block';
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
