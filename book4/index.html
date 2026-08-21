@@ -1,154 +1,504 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hit the 60s — Book 4</title>
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-:root{--navy:#1F3864;--blue:#2E75B6;--red:#C00000;--green:#00B050;--gold:#F4A800;--bg:#F0F4FA;--card:#FFFFFF;--text:#1a1a2e;--muted:#6B7280;--border:#E2E8F0;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;gap:12px;}
-.logo-badge{background:var(--gold);color:var(--navy);font-weight:800;font-size:13px;padding:4px 10px;border-radius:6px;}
-header h1{color:#fff;font-size:18px;font-weight:700;}
-header span{color:#94A3B8;font-size:13px;margin-left:auto;}
-.container{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
-#selector{text-align:center;padding:40px 20px;}
-#selector h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px;}
-#selector p{color:var(--muted);font-size:14px;margin-bottom:32px;}
-.test-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:400px;margin:0 auto;}
-.test-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:18px 8px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.test-btn:hover{border-color:var(--blue);background:#EEF4FF;transform:translateY(-2px);}
-.test-btn .num{font-size:24px;font-weight:800;color:var(--navy);}
-.test-btn .lbl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
-#quiz{display:none;}
-.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-.back-btn{background:none;border:none;cursor:pointer;color:var(--blue);font-size:14px;font-weight:600;padding:6px 0;}
-.quiz-title{font-size:18px;font-weight:800;color:var(--navy);}
-.quiz-sub{font-size:12px;color:var(--muted);margin-left:auto;}
-.progress-wrap{background:var(--border);border-radius:99px;height:6px;margin-bottom:24px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:99px;transition:width 0.4s ease;}
-.q-card{background:var(--card);border-radius:16px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;}
-.q-num{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
-.q-text{font-size:17px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:24px;}
-.choices{display:flex;flex-direction:column;gap:10px;}
-.choice{display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.18s;background:#FAFBFC;}
-.choice:hover:not(.locked){border-color:var(--blue);background:#EEF4FF;}
-.choice-letter{width:32px;height:32px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0;}
-.choice-text{font-size:15px;color:var(--text);flex:1;}
-.choice.correct{border-color:var(--green);background:#F0FDF4;}
-.choice.correct .choice-letter{background:var(--green);color:#fff;}
-.choice.wrong{border-color:var(--red);background:#FFF0F0;}
-.choice.wrong .choice-letter{background:var(--red);color:#fff;}
-.choice.selected{border-color:var(--blue);background:#EEF4FF;}
-.choice.selected .choice-letter{background:var(--blue);color:#fff;}
-.choice.locked{cursor:default;}
-.feedback{display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;}
-.feedback.correct-fb{background:#F0FDF4;color:var(--green);border:1px solid #BBF7D0;display:block;}
-.feedback.wrong-fb{background:#FFF0F0;color:var(--red);border:1px solid #FECACA;display:block;}
-.nav-row{display:flex;gap:10px;margin-top:6px;}
-.nav-btn{flex:1;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
-.nav-btn.primary{background:var(--navy);color:#fff;}
-.nav-btn.primary:hover{background:var(--blue);}
-.nav-btn.secondary{background:var(--border);color:var(--muted);}
-.nav-btn.secondary:hover{background:#D1D5DB;color:var(--text);}
-.nav-btn:disabled{opacity:0.4;cursor:not-allowed;}
-#results{display:none;}
-.result-card{background:var(--card);border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:20px;}
-.result-emoji{font-size:60px;margin-bottom:16px;display:block;}
-.result-score{font-size:56px;font-weight:800;line-height:1;margin-bottom:4px;}
-.result-score.pass{color:var(--green);}
-.result-score.fail{color:var(--red);}
-.result-label{font-size:14px;color:var(--muted);margin-bottom:16px;}
-.result-badge{display:inline-block;padding:8px 20px;border-radius:99px;font-size:15px;font-weight:700;margin-bottom:20px;}
-.result-badge.pass{background:#F0FDF4;color:var(--green);}
-.result-badge.fail{background:#FFF0F0;color:var(--red);}
-.result-msg{font-size:14px;color:var(--muted);line-height:1.6;}
-.review-list{background:var(--card);border-radius:16px;padding:20px;margin-bottom:20px;}
-.review-list h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
-.review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
-.review-item:last-child{border-bottom:none;}
-.review-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
-.review-q{font-size:13px;color:var(--text);flex:1;}
-.review-ans{font-size:12px;font-weight:600;}
-.review-ans.wrong{color:var(--red);}
-.correct-ans{color:var(--green);}
-.result-actions{display:flex;flex-direction:column;gap:10px;}
-.action-btn{padding:15px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
-.action-btn.primary{background:var(--navy);color:#fff;}
-.action-btn.primary:hover{background:var(--blue);}
-.action-btn.outline{background:none;border:2px solid var(--border);color:var(--muted);}
-.action-btn.outline:hover{border-color:var(--blue);color:var(--blue);}
-.page-footer{text-align:center;margin-top:40px;font-size:12px;color:#CBD5E1;}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hit the 60s — Book 4</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    :root {
+      --navy: #1F3864;
+      --blue: #2E75B6;
+      --red: #C00000;
+      --green: #00B050;
+      --gold: #F4A800;
+      --bg: #F0F4FA;
+      --card: #FFFFFF;
+      --text: #1a1a2e;
+      --muted: #6c757d;
+      --border: #dbe2ef;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--navy);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    header h1 { color: #fff; font-size: 18px; font-weight: 700; }
+    header span { color: #94A3B8; font-size: 13px; margin-left: auto; }
+    .container { max-width: 680px; margin: 0 auto; padding: 24px 16px 60px; }
+    #selector { text-align: center; padding: 40px 20px; }
+    #selector h2 { font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    #selector p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+    .test-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-width: 400px; margin: 0 auto; }
+    .test-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .test-btn:hover { border-color: var(--blue); background: #EEF4FF; transform: translateY(-2px); }
+    .test-btn .num { font-size: 24px; font-weight: 800; color: var(--navy); }
+    .test-btn .lbl { font-size: 10px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    #quiz { display: none; }
+    .quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .back-btn { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 14px; font-weight: 600; padding: 6px 0; }
+    .quiz-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .quiz-sub { font-size: 12px; color: var(--muted); margin-left: auto; }
+    .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 24px; }
+    .progress-bar { background: var(--blue); height: 100%; width: 0%; transition: width 0.3s ease; }
+    .q-card { background: var(--card); border-radius: 16px; padding: 28px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .q-meta { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+    .q-text { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 24px; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      background: var(--bg);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--blue); background: #EEF4FF; }
+    .opt-btn.correct { background: #E6F9ED !important; border-color: var(--green) !important; color: #00662E; font-weight: 700; }
+    .opt-btn.wrong { background: #FDE8E8 !important; border-color: var(--red) !important; color: #8B0000; font-weight: 700; }
+    .opt-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .opt-btn.correct .opt-letter { background: var(--green); color: #fff; border-color: var(--green); }
+    .opt-btn.wrong .opt-letter { background: var(--red); color: #fff; border-color: var(--red); }
+    .quiz-nav { display: flex; justify-content: space-between; align-items: center; }
+    .nav-btn {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.9; }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    #results { display: none; text-align: center; }
+    .result-card { background: var(--card); border-radius: 20px; padding: 36px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .result-emoji { font-size: 48px; margin-bottom: 12px; }
+    .result-score { font-size: 52px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .result-label { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .result-badge { display: inline-block; padding: 6px 18px; border-radius: 99px; font-size: 14px; font-weight: 800; margin-bottom: 16px; }
+    .result-badge.pass { background: #E6F9ED; color: #00662E; }
+    .result-badge.fail { background: #FDE8E8; color: #8B0000; }
+    .result-msg { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .review-list { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left; }
+    .review-list h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 14px; text-transform: uppercase; }
+    .review-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .review-item:last-child { border-bottom: none; }
+    .review-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .review-q { font-size: 13px; color: var(--text); flex: 1; }
+    .review-ans { font-size: 12px; font-weight: 600; }
+    .review-ans.wrong { color: var(--red); }
+    .review-ans.correct { color: var(--green); }
+    .result-actions { display: flex; flex-direction: column; gap: 10px; }
+    .action-btn { padding: 15px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; text-align: center; }
+    .action-btn.primary { background: var(--navy); color: #fff; }
+    .action-btn.primary:hover { background: var(--blue); }
+    .action-btn.outline { background: none; border: 2px solid var(--border); color: var(--muted); }
+    .action-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+    .page-footer { text-align: center; margin-top: 40px; padding: 16px 0; }
+    .footer-text { font-size: 13px; font-weight: 700; color: #800020; line-height: 1.6; white-space: nowrap; }
+  </style>
 </head>
 <body>
-<header>
-  <div class="logo-badge">HIT THE 60s</div>
-  <h1>Book 4 — Practice Tests</h1>
-  <span>ALC Prep Course</span>
-</header>
-<div class="container">
-  <div id="selector">
-    <h2>Book Four</h2>
-    <p>Choose a test to begin. Pass score: 24 / 30</p>
-    <div class="test-grid">
-      <div class="test-btn" onclick="startTest(0)"><span class="num">1</span><span class="lbl">Test</span></div>
-      <div class="test-btn" onclick="startTest(1)"><span class="num">2</span><span class="lbl">Test</span></div>
-      <div class="test-btn" onclick="startTest(2)"><span class="num">3</span><span class="lbl">Test</span></div>
-      <div class="test-btn" onclick="startTest(3)"><span class="num">4</span><span class="lbl">Test</span></div>
-      <div class="test-btn" onclick="startTest(4)"><span class="num">5</span><span class="lbl">Test</span></div>
+  <header>
+    <div class="logo-badge">HIT THE 60s</div>
+    <h1>Book 4 — Practice Tests</h1>
+    <span>ALC Prep Course</span>
+  </header>
+  <div class="container">
+    <div id="selector">
+      <h2>Book Four</h2>
+      <p>Choose a test to begin. Pass score: 24 / 30 (80%)</p>
+      <div class="test-grid">
+        <button class="test-btn" onclick="startTest(0)"><span class="num">1</span><span class="lbl">Test 1</span></button>
+        <button class="test-btn" onclick="startTest(1)"><span class="num">2</span><span class="lbl">Test 2</span></button>
+        <button class="test-btn" onclick="startTest(2)"><span class="num">3</span><span class="lbl">Test 3</span></button>
+        <button class="test-btn" onclick="startTest(3)"><span class="num">4</span><span class="lbl">Test 4</span></button>
+        <button class="test-btn" onclick="startTest(4)"><span class="num">5</span><span class="lbl">Test 5</span></button>
+      </div>
+    </div>
+    <div id="quiz">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="backToSelector()">← Back to Tests</button>
+        <div class="quiz-title" id="quizTitle">Test 1</div>
+        <div class="quiz-sub" id="quizSub">Q1 of 30</div>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="q-card">
+        <div class="q-meta" id="qMeta">Question 1</div>
+        <div class="q-text" id="qText">Question text goes here...</div>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevQ()">← Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQ()">Next →</button>
+      </div>
+    </div>
+    <div id="results">
+      <div class="result-card">
+        <div class="result-emoji" id="resultEmoji">🎯</div>
+        <div class="result-score" id="resultScore">0</div>
+        <div class="result-label">out of 30 questions</div>
+        <div class="result-badge" id="resultBadge">PASSED</div>
+        <div class="result-msg" id="resultMsg">Great job!</div>
+      </div>
+      <div class="review-list" id="reviewList"></div>
+      <div class="result-actions">
+        <button class="action-btn primary" onclick="retryTest()">Try Again</button>
+        <button class="action-btn outline" onclick="backToSelector()">Choose Another Test</button>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="footer-text">Prepared by Khalid Alameer &nbsp;|&nbsp; Western Naval Aviation Group &nbsp;|</div>
+      <div class="footer-text">"Hit the 60s"</div>
     </div>
   </div>
-  <div id="quiz">
-    <div class="quiz-header">
-      <button class="back-btn" onclick="backToSelector()">← Back</button>
-      <span class="quiz-title" id="quizTitle"></span>
-      <span class="quiz-sub">Pass: 24/30</span>
-    </div>
-    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="q-card">
-      <div class="q-num" id="qNum"></div>
-      <div class="q-text" id="qText"></div>
-      <div class="choices" id="choices"></div>
-      <div class="feedback" id="feedback"></div>
-    </div>
-    <div class="nav-row">
-      <button class="nav-btn secondary" id="prevBtn" onclick="prevQ()">← Prev</button>
-      <button class="nav-btn primary" id="nextBtn" onclick="nextQ()">Next →</button>
-    </div>
-  </div>
-  <div id="results">
-    <div class="result-card">
-      <span class="result-emoji" id="resultEmoji"></span>
-      <div class="result-score" id="resultScore"></div>
-      <div class="result-label">out of 30 questions</div>
-      <div class="result-badge" id="resultBadge"></div>
-      <div class="result-msg" id="resultMsg"></div>
-    </div>
-    <div class="review-list" id="reviewList"></div>
-    <div class="result-actions">
-      <button class="action-btn primary" onclick="retryTest()">🔄 Try Again</button>
-      <button class="action-btn outline" onclick="backToSelector()">← Choose Another Test</button>
-    </div>
-  </div>
-  <div class="page-footer">
-    <div>Prepared by Khalid Alameer &nbsp;|&nbsp; Western Naval Aviation Group &nbsp;|</div>
-    <div style="text-align:center;font-size:14px;font-weight:700;color:#94A3B8;margin-top:6px;">"Hit the 60s"</div>
-  </div>
-</div>
-<script>
-const BOOK_TITLE = "Book 4";
-const TESTS = [{"title":"Test 1","questions":[{"q":"I ______ two American cities last year.","ch":["A) visit","B) visits","C) visited","D) visiting"],"a":"C"},{"q":"I ______ visit New York City.","ch":["A) not","B) don't","C) didn't","D) wasn't"],"a":"C"},{"q":"Did you watch the game?  —  Yes, ______.","ch":["A) I watched","B) I did","C) Both A and B","D) I watch"],"a":"C"},{"q":"Did she cook dinner?  —  No, ______.","ch":["A) she didn't","B) she don't","C) she wasn't","D) she not"],"a":"A"},{"q":"The game ______ at 2200.","ch":["A) end","B) ends","C) ending","D) ended"],"a":"D"},{"q":"They ______ basketball yesterday.","ch":["A) play","B) plays","C) played","D) playing"],"a":"C"},{"q":"He ______ in Dallas for two years.","ch":["A) live","B) lives","C) living","D) lived"],"a":"D"},{"q":"I ______ the game on TV last night.","ch":["A) like","B) liked","C) liking","D) likes"],"a":"B"},{"q":"He studied ______ day long.","ch":["A) the whole","B) all","C) long","D) all day"],"a":"D"},{"q":"I visited Dallas two years ______.","ch":["A) next","B) last","C) ago","D) before"],"a":"C"},{"q":"What ______ did he see?","ch":["A) time","B) sport","C) city","D) game"],"a":"D"},{"q":"We ate at a ______ downtown.","ch":["A) sport","B) show","C) game","D) restaurant"],"a":"D"},{"q":"Dallas and Houston are ______ in Texas.","ch":["A) towns","B) cities","C) sports","D) games"],"a":"B"},{"q":"Ahmed's favorite ______ is soccer.","ch":["A) team","B) game","C) sport","D) ball"],"a":"C"},{"q":"She can ______. She learned as a child.","ch":["A) swims","B) swimming","C) swim","D) swam"],"a":"C"},{"q":"I ______ swim very well.","ch":["A) can","B) can't","C) must","D) may"],"a":"B"},{"q":"May I come in?  —  Yes, ______.","ch":["A) you can","B) you may","C) you must","D) Both A and B"],"a":"D"},{"q":"He ______ study tonight.","ch":["A) can","B) may","C) must","D) might"],"a":"C"},{"q":"You ______ smoke in class.","ch":["A) must","B) can","C) must not","D) may"],"a":"C"},{"q":"What ______ is your car?","ch":["A) size","B) time","C) color","D) sport"],"a":"C"},{"q":"How much ______ the pen cost?","ch":["A) is","B) are","C) does","D) do"],"a":"C"},{"q":"I don't like ______ shirt. (near me)","ch":["A) that","B) those","C) these","D) this"],"a":"D"},{"q":"I like ______ shirt. (far away)","ch":["A) this","B) these","C) that","D) those"],"a":"C"},{"q":"The past of 'bring' is ______.","ch":["A) bringed","B) brought","C) brung","D) brang"],"a":"B"},{"q":"The past of 'eat' is ______.","ch":["A) eated","B) aten","C) ate","D) eats"],"a":"C"},{"q":"Who ______ this book?","ch":["A) bring","B) brings","C) brought","D) brung"],"a":"C"},{"q":"What time ______ you go?","ch":["A) do","B) are","C) did","D) were"],"a":"C"},{"q":"He ______ to the base this morning.","ch":["A) drive","B) drives","C) driven","D) drove"],"a":"D"},{"q":"She ______ at the pool yesterday.","ch":["A) swim","B) swims","C) swam","D) swimmed"],"a":"C"},{"q":"They ______ lunch at the mess hall.","ch":["A) eat","B) eats","C) eaten","D) ate"],"a":"D"}]},{"title":"Test 2","questions":[{"q":"He ______ to class late.","ch":["A) come","B) comes","C) came","D) comed"],"a":"C"},{"q":"She ______ a great movie.","ch":["A) see","B) sees","C) seen","D) saw"],"a":"D"},{"q":"He ______ at the front of the class.","ch":["A) sit","B) sits","C) sat","D) sitted"],"a":"C"},{"q":"I ______ eight hours last night.","ch":["A) sleep","B) sleeps","C) slept","D) sleeped"],"a":"C"},{"q":"She ______ to the colonel.","ch":["A) speak","B) speaks","C) spoken","D) spoke"],"a":"D"},{"q":"He ______ a new uniform.","ch":["A) buy","B) buys","C) buyed","D) bought"],"a":"D"},{"q":"She ______ a taxi.","ch":["A) take","B) takes","C) took","D) taked"],"a":"C"},{"q":"You must ______ an officer.","ch":["A) salutes","B) saluting","C) saluted","D) salute"],"a":"D"},{"q":"He ______ report at 0600.","ch":["A) can","B) must","C) may","D) Both B"],"a":"B"},{"q":"The insignia shows his ______.","ch":["A) name tag","B) ID card","C) rank","D) uniform"],"a":"C"},{"q":"Show your ______ card at the gate.","ch":["A) rank","B) ID","C) stripe","D) insignia"],"a":"B"},{"q":"Generals wear ______ insignia.","ch":["A) silver","B) gold","C) blue","D) black"],"a":"B"},{"q":"He has three ______s on his sleeve.","ch":["A) caps","B) ranks","C) stripes","D) uniforms"],"a":"C"},{"q":"'Can't' is a ______ of 'cannot'.","ch":["A) sentence","B) statement","C) contraction","D) paragraph"],"a":"C"},{"q":"Every sentence ends with a ______.","ch":["A) comma","B) period","C) apostrophe","D) question mark"],"a":"B"},{"q":"Use a ______ at the end of a question.","ch":["A) period","B) comma","C) apostrophe","D) question mark"],"a":"D"},{"q":"Put ______ your uniform before inspection.","ch":["A) in","B) off","C) on","D) up"],"a":"C"},{"q":"Take ______ your hat inside.","ch":["A) on","B) up","C) in","D) off"],"a":"D"},{"q":"He ______ during the lecture.","ch":["A) fell asleep","B) woke up","C) hung up","D) put on"],"a":"A"},{"q":"He ______ his dress uniform.","ch":["A) worn","B) wears","C) wore","D) wearing"],"a":"C"},{"q":"How many books ______ he buy?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"What ______ she say?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"The past of 'stand' is ______.","ch":["A) standed","B) stood","C) stund","D) standed"],"a":"B"},{"q":"The past of 'write' is ______.","ch":["A) writed","B) written","C) writ","D) wrote"],"a":"D"},{"q":"He ______ a letter last week.","ch":["A) write","B) writes","C) written","D) wrote"],"a":"D"},{"q":"What ______ is your jacket?","ch":["A) size","B) color","C) time","D) sport"],"a":"B"},{"q":"How much ______ the shirt?","ch":["A) costs","B) cost","C) is","D) Both B and C"],"a":"D"},{"q":"These ______ are comfortable.","ch":["A) boot","B) boots","C) shoe","D) hat"],"a":"B"},{"q":"Those ______ are too big.","ch":["A) glove","B) gloves","C) scarves","D) Both B and C"],"a":"B"},{"q":"I'll take ______ blue shirt. (far)","ch":["A) this","B) these","C) those","D) that"],"a":"D"}]},{"title":"Test 3","questions":[{"q":"He ______ at attention for an hour.","ch":["A) stand","B) stands","C) stood","D) standed"],"a":"C"},{"q":"She ______ coffee this morning.","ch":["A) drink","B) drank","C) drunk","D) drinks"],"a":"B"},{"q":"The store ______ uniforms.","ch":["A) sell","B) sells","C) sold","D) selling"],"a":"C"},{"q":"Did he visit Dallas?  —  No, ______.","ch":["A) he didn't","B) he don't","C) he wasn't","D) he not"],"a":"A"},{"q":"What ______ she cook?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"When ______ you bring the book?","ch":["A) do","B) does","C) did","D) were"],"a":"C"},{"q":"She can speak three ______s.","ch":["A) cities","B) sports","C) languages","D) teams"],"a":"C"},{"q":"He ______ speak English well.","ch":["A) can","B) can't","C) must","D) may"],"a":"A"},{"q":"May I take a break?  —  Yes, ______.","ch":["A) you must","B) you may","C) you can't","D) you should"],"a":"B"},{"q":"You ______ be late.","ch":["A) can","B) may","C) must not","D) must"],"a":"C"},{"q":"He ______ report at 0600.","ch":["A) can","B) may","C) must","D) Both A and C"],"a":"C"},{"q":"What ______ is that uniform?","ch":["A) size","B) color","C) time","D) sport"],"a":"B"},{"q":"How much ______ those boots cost?","ch":["A) is","B) are","C) do","D) does"],"a":"C"},{"q":"I don't like ______ tie. (near)","ch":["A) that","B) those","C) these","D) this"],"a":"D"},{"q":"I like ______ boots. (far)","ch":["A) this","B) that","C) those","D) these"],"a":"C"},{"q":"Summer is the ______ season.","ch":["A) coolest","B) coldest","C) hottest","D) nicest"],"a":"C"},{"q":"Flowers bloom in ______.","ch":["A) summer","B) winter","C) autumn","D) spring"],"a":"D"},{"q":"The leaves change color in ______.","ch":["A) spring","B) summer","C) autumn","D) winter"],"a":"C"},{"q":"He wore a ______ shirt.","ch":["A) blue","B) blouse","C) dress","D) skirt"],"a":"A"},{"q":"She wore a ______ dress.","ch":["A) boot","B) sock","C) blue","D) glove"],"a":"C"},{"q":"He put on his ______ and boots.","ch":["A) shoes","B) socks","C) jacket","D) Both B is correct"],"a":"B"},{"q":"The past of 'swim' is ______.","ch":["A) swimmed","B) swum","C) swam","D) swimd"],"a":"C"},{"q":"The past of 'take' is ______.","ch":["A) taked","B) took","C) taken","D) tak"],"a":"B"},{"q":"The past of 'choose' is ______.","ch":["A) choosed","B) chosen","C) chose","D) chosed"],"a":"C"},{"q":"He ______ a new cap.","ch":["A) buy","B) buys","C) bought","D) buyed"],"a":"C"},{"q":"She ______ a taxi.","ch":["A) take","B) takes","C) taken","D) took"],"a":"D"},{"q":"The ______ shows his rank.","ch":["A) stripe","B) insignia","C) name tag","D) ID card"],"a":"B"},{"q":"He ______ his uniform.","ch":["A) wear","B) wears","C) wore","D) weared"],"a":"C"},{"q":"I ______ at 0600.","ch":["A) wake up","B) woke up","C) waked up","D) wake"],"a":"B"},{"q":"He ______ during the lecture.","ch":["A) fell asleep","B) fall asleep","C) falls asleep","D) fallen asleep"],"a":"A"}]},{"title":"Test 4","questions":[{"q":"I ______ two cities last month.","ch":["A) visit","B) visits","C) visited","D) visiting"],"a":"C"},{"q":"Did you watch?  —  No, ______.","ch":["A) I didn't","B) I don't","C) I wasn't","D) I not"],"a":"A"},{"q":"What time ______ the game start?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"The past of 'begin' is ______.","ch":["A) beginned","B) begun","C) began","D) begins"],"a":"C"},{"q":"The past of 'say' is ______.","ch":["A) sayed","B) said","C) says","D) saied"],"a":"B"},{"q":"The past of 'see' is ______.","ch":["A) seed","B) seen","C) saw","D) sees"],"a":"C"},{"q":"The past of 'speak' is ______.","ch":["A) speaked","B) spoked","C) spoken","D) spoke"],"a":"D"},{"q":"She can ______ very well.","ch":["A) swims","B) swimming","C) swim","D) swam"],"a":"C"},{"q":"He ______ drive. He never learned.","ch":["A) can","B) must","C) can't","D) may"],"a":"C"},{"q":"You ______ salute an officer.","ch":["A) can","B) may","C) must","D) can't"],"a":"C"},{"q":"You ______ talk during the test.","ch":["A) must","B) can","C) may","D) must not"],"a":"D"},{"q":"______ I leave?  —  Yes, you may.","ch":["A) Must","B) Can","C) May","D) Both B and C"],"a":"D"},{"q":"What ______ is your uniform?","ch":["A) size","B) color","C) time","D) sport"],"a":"B"},{"q":"How much ______ the jacket?","ch":["A) cost","B) costs","C) is","D) Both B and C"],"a":"D"},{"q":"I don't like ______ jacket. (near)","ch":["A) that","B) those","C) these","D) this"],"a":"D"},{"q":"I like ______ jacket. (far)","ch":["A) this","B) these","C) that","D) those"],"a":"C"},{"q":"It is very hot in ______.","ch":["A) winter","B) spring","C) summer","D) autumn"],"a":"C"},{"q":"It gets cold in ______.","ch":["A) summer","B) spring","C) autumn","D) winter"],"a":"D"},{"q":"The weather is ______ in autumn.","ch":["A) hot","B) cool","C) warm","D) cold"],"a":"B"},{"q":"He wore a white ______.","ch":["A) dress","B) shirt","C) skirt","D) blouse"],"a":"B"},{"q":"She wore a ______ to cover her neck.","ch":["A) belt","B) tie","C) scarf","D) sock"],"a":"C"},{"q":"Soldiers must polish their ______.","ch":["A) hats","B) boots","C) gloves","D) scarves"],"a":"B"},{"q":"He bought a ______ of cigarettes.","ch":["A) stripe","B) rank","C) pack","D) cap"],"a":"C"},{"q":"He ______ to duty at 0600.","ch":["A) salutes","B) reports","C) smokes","D) brings"],"a":"B"},{"q":"That statement is ______. It is correct.","ch":["A) false","B) true","C) bad","D) wrong"],"a":"B"},{"q":"That statement is ______. It is not correct.","ch":["A) true","B) good","C) false","D) right"],"a":"C"},{"q":"The ______ had a great dance.","ch":["A) sport","B) game","C) service club","D) restaurant"],"a":"C"},{"q":"Put on your ______. It's cold.","ch":["A) socks","B) coat","C) shoes","D) tie"],"a":"B"},{"q":"He ______ his jacket.","ch":["A) hung","B) hang","C) hangs","D) hanged"],"a":"A"},{"q":"She was ______ when I called.","ch":["A) awake","B) asleep","C) well","D) late"],"a":"B"}]},{"title":"Test 5","questions":[{"q":"I ______ two cities last year.","ch":["A) visit","B) visits","C) visited","D) visiting"],"a":"C"},{"q":"I ______ visit New York.","ch":["A) not","B) don't","C) didn't","D) wasn't"],"a":"C"},{"q":"Did you watch?  —  Yes, ______.","ch":["A) I watched","B) I did","C) Both are correct","D) I watch"],"a":"C"},{"q":"The past of 'bring' is ______.","ch":["A) bringed","B) brought","C) brung","D) brang"],"a":"B"},{"q":"The past of 'eat' is ______.","ch":["A) eated","B) aten","C) ate","D) eats"],"a":"C"},{"q":"The past of 'swim' is ______.","ch":["A) swimmed","B) swum","C) swam","D) swimd"],"a":"C"},{"q":"The past of 'see' is ______.","ch":["A) seed","B) seen","C) saw","D) sees"],"a":"C"},{"q":"What time ______ the game start?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"She can ______.","ch":["A) swims","B) swimming","C) swim","D) swam"],"a":"C"},{"q":"I ______ swim well.","ch":["A) can","B) can't","C) must","D) may"],"a":"B"},{"q":"May I come in?  —  Yes, ______.","ch":["A) you can","B) you may","C) you must","D) Both A and B"],"a":"D"},{"q":"He ______ study tonight.","ch":["A) can","B) may","C) must","D) might"],"a":"C"},{"q":"You ______ smoke in class.","ch":["A) must","B) can","C) must not","D) may"],"a":"C"},{"q":"What ______ is your car?","ch":["A) size","B) time","C) color","D) sport"],"a":"C"},{"q":"How much ______ the pen cost?","ch":["A) is","B) are","C) does","D) do"],"a":"C"},{"q":"I don't like ______ shirt. (near)","ch":["A) that","B) those","C) these","D) this"],"a":"D"},{"q":"I like ______ shirt. (far)","ch":["A) this","B) these","C) that","D) those"],"a":"C"},{"q":"Flowers bloom in ______.","ch":["A) summer","B) winter","C) autumn","D) spring"],"a":"D"},{"q":"It is very hot in ______.","ch":["A) winter","B) spring","C) summer","D) autumn"],"a":"C"},{"q":"He wore a white ______.","ch":["A) dress","B) shirt","C) skirt","D) blouse"],"a":"B"},{"q":"Soldiers wear ______.","ch":["A) dresses","B) skirts","C) uniforms","D) stockings"],"a":"C"},{"q":"She ______ a taxi.","ch":["A) take","B) takes","C) taken","D) took"],"a":"D"},{"q":"He ______ a letter.","ch":["A) write","B) writes","C) written","D) wrote"],"a":"D"},{"q":"Put ______ your uniform.","ch":["A) in","B) off","C) on","D) up"],"a":"C"},{"q":"Take ______ your hat.","ch":["A) on","B) up","C) in","D) off"],"a":"D"},{"q":"He ______ during the lecture.","ch":["A) fell asleep","B) fall asleep","C) falls asleep","D) fallen asleep"],"a":"A"},{"q":"The ______ shows his rank.","ch":["A) stripe","B) insignia","C) name tag","D) ID card"],"a":"B"},{"q":"How many books ______ he buy?","ch":["A) do","B) does","C) did","D) was"],"a":"C"},{"q":"That statement is ______. It is correct.","ch":["A) false","B) wrong","C) true","D) bad"],"a":"C"},{"q":"The store ______ uniforms.","ch":["A) sell","B) sells","C) sold","D) selling"],"a":"C"}]}];
-let currentTest=0,currentQ=0,answers=[],answered=[];
-function startTest(idx){currentTest=idx;currentQ=0;answers=new Array(30).fill(null);answered=new Array(30).fill(false);document.getElementById('selector').style.display='none';document.getElementById('quiz').style.display='block';document.getElementById('results').style.display='none';document.getElementById('quizTitle').textContent=BOOK_TITLE+' — '+TESTS[idx].title;renderQ();}
-function renderQ(){var test=TESTS[currentTest];var q=test.questions[currentQ];var total=test.questions.length;document.getElementById('qNum').textContent='Question '+(currentQ+1)+' of '+total;document.getElementById('qText').textContent=q.q;document.getElementById('progressFill').style.width=(((currentQ+1)/total)*100)+'%';var fb=document.getElementById('feedback');fb.className='feedback';fb.textContent='';var choicesEl=document.getElementById('choices');choicesEl.innerHTML='';q.ch.forEach(function(choice,i){var letter=['A','B','C','D'][i];var div=document.createElement('div');div.className='choice';if(answered[currentQ])div.classList.add('locked');var userAns=answers[currentQ];if(answered[currentQ]){if(letter===q.a)div.classList.add('correct');else if(letter===userAns&&userAns!==q.a)div.classList.add('wrong');}else if(userAns===letter){div.classList.add('selected');}div.innerHTML='<div class="choice-letter">'+letter+'</div><div class="choice-text">'+choice.substring(3)+'</div>';if(!answered[currentQ]){div.onclick=(function(l){return function(){selectAnswer(l);};})(letter);}choicesEl.appendChild(div);});if(answered[currentQ]){var correct=answers[currentQ]===q.a;fb.className='feedback '+(correct?'correct-fb':'wrong-fb');fb.textContent=correct?'✓ Correct!':'✗ Wrong. The correct answer is '+q.a+'.';}document.getElementById('prevBtn').disabled=currentQ===0;document.getElementById('nextBtn').textContent=currentQ===TESTS[currentTest].questions.length-1?'Finish ✓':'Next →';}
-function selectAnswer(letter){if(answered[currentQ])return;answers[currentQ]=letter;answered[currentQ]=true;renderQ();}
-function nextQ(){if(!answered[currentQ]){alert('Please choose an answer first.');return;}if(currentQ<TESTS[currentTest].questions.length-1){currentQ++;renderQ();}else{showResults();}}
-function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
-function showResults(){document.getElementById('quiz').style.display='none';document.getElementById('results').style.display='block';var test=TESTS[currentTest];var score=0;answers.forEach(function(a,i){if(a===test.questions[i].a)score++;});var pass=score>=24;document.getElementById('resultEmoji').textContent=pass?'🎯':'📚';document.getElementById('resultScore').textContent=score+'/30';document.getElementById('resultScore').className='result-score '+(pass?'pass':'fail');var badge=document.getElementById('resultBadge');badge.textContent=pass?'✅ PASSED':'❌ NOT PASSED';badge.className='result-badge '+(pass?'pass':'fail');document.getElementById('resultMsg').textContent=pass?'Excellent! You scored '+score+' out of 30. Keep it up!':'You scored '+score+' out of 30. You need 24 to pass. Review your mistakes and try again!';var reviewList=document.getElementById('reviewList');var wrongs=answers.map(function(a,i){return{i:i,a:a,correct:a===test.questions[i].a,q:test.questions[i]};}).filter(function(x){return!x.correct;});if(wrongs.length===0){reviewList.innerHTML='<h3>Review</h3><p style="color:var(--green);font-size:14px;padding:10px 0">🎉 Perfect score! No mistakes.</p>';}else{reviewList.innerHTML='<h3>Mistakes to Review ('+wrongs.length+')</h3>'+wrongs.map(function(w){return'<div class="review-item"><span class="review-icon">❌</span><div class="review-q">Q'+(w.i+1)+': '+w.q.q+'</div><div class="review-ans wrong">You: '+(w.a||'—')+' | Correct: <span class="correct-ans">'+w.q.a+'</span></div></div>';}).join('');}}
-function retryTest(){startTest(currentTest);}
-function backToSelector(){document.getElementById('selector').style.display='block';document.getElementById('quiz').style.display='none';document.getElementById('results').style.display='none';}
-</script>
+  <script>
+    const BOOK_TITLE = "Book 4";
+    const TESTS = [
+      {
+        title: "Test 1",
+        questions: [
+          { q: "He _ breakfast every morning at 7:00 AM.", a: "eats", b: "ate", c: "eating", d: "eaten", ans: "a" },
+          { q: "Where __ you go yesterday afternoon?", a: "do", b: "did", c: "does", d: "are", ans: "b" },
+          { q: "This is the __ movie I have ever seen.", a: "good", b: "better", c: "best", d: "well", ans: "c" },
+          { q: "She __ to the doctor if she feels sick tomorrow.", a: "will go", b: "went", c: "goes", d: "gone", ans: "a" },
+          { q: "The students __ studying in the library right now.", a: "is", b: "are", c: "was", d: "were", ans: "b" },
+          { q: "How __ sugar do you need for the cake?", a: "many", b: "much", c: "few", d: "several", ans: "b" },
+          { q: "We __ live in New York before moving to California.", a: "use to", b: "used to", c: "uses to", d: "using to", ans: "b" },
+          { q: "Please turn __ the lights when you leave the room.", a: "off", b: "out", c: "in", d: "on", ans: "a" },
+          { q: "I don't have __ money left in my wallet.", a: "some", b: "any", c: "no", d: "many", ans: "b" },
+          { q: "They have been living here __ five years.", a: "since", b: "for", c: "during", d: "from", ans: "b" },
+          { q: "Look at those black clouds! It __ rain soon.", a: "is going to", b: "will be", c: "rains", d: "is raining", ans: "a" },
+          { q: "My brother is older __ me.", a: "then", b: "than", c: "as", d: "from", ans: "b" },
+          { q: "Can you help me __ this heavy box?", a: "carry", b: "carried", c: "carrying", d: "carries", ans: "a" },
+          { q: "She usually __ to work by bus.", a: "travels", b: "travel", c: "traveling", d: "traveled", ans: "a" },
+          { q: "The key was __ the table under the book.", a: "on", b: "in", c: "at", d: "to", ans: "a" },
+          { q: "Neither John __ his friend was at the party.", a: "or", b: "nor", c: "and", d: "but", ans: "b" },
+          { q: "You __ stop at the red light. It's the law.", a: "must", b: "might", c: "could", d: "would", ans: "a" },
+          { q: "What __ you do if you win the lottery?", a: "will", b: "did", c: "would", d: "have", ans: "a" },
+          { q: "He drove __ to avoid an accident on the icy road.", a: "careful", b: "carefully", c: "careless", d: "carelessly", ans: "b" },
+          { q: "This house __ built in 1995.", a: "is", b: "was", c: "were", d: "has been", ans: "b" },
+          { q: "I haven't finished reading the report __.", a: "already", b: "yet", c: "still", d: "just", ans: "b" },
+          { q: "She is interested __ learning new languages.", a: "on", b: "in", c: "at", d: "about", ans: "b" },
+          { q: "We decided __ a new car next month.", a: "to buy", b: "buying", c: "buy", d: "bought", ans: "a" },
+          { q: "If it rains, we __ stay at home.", a: "would", b: "will", c: "did", d: "had", ans: "b" },
+          { q: "The teacher asked us to pay __ to the board.", a: "attention", b: "care", c: "notice", d: "mind", ans: "a" },
+          { q: "He is the man __ car was stolen yesterday.", a: "who", b: "whom", c: "whose", d: "which", ans: "c" },
+          { q: "There aren't __ apples in the basket.", a: "much", b: "many", c: "some", d: "little", ans: "b" },
+          { q: "She arrived __ the airport just in time.", a: "at", b: "in", c: "to", d: "on", ans: "a" },
+          { q: "The news __ very surprising to everyone.", a: "were", b: "was", c: "are", d: "have been", ans: "b" },
+          { q: "You should avoid __ late at night.", a: "eat", b: "to eat", c: "eating", d: "ate", ans: "c" }
+        ]
+      },
+      {
+        title: "Test 2",
+        questions: [
+          { q: "My sister is __ than I am at playing chess.", a: "good", b: "better", c: "best", d: "well", ans: "b" },
+          { q: "He __ working at this company since 2018.", a: "is", b: "was", c: "has been", d: "had been", ans: "c" },
+          { q: "The sun __ in the east every morning.", a: "rises", b: "rose", c: "rising", d: "risen", ans: "a" },
+          { q: "You __ bring an umbrella; it looks like rain.", a: "should", b: "would", c: "shall", d: "may", ans: "a" },
+          { q: "They were sleeping when the phone __.", a: "rings", b: "rang", c: "rung", d: "was ringing", ans: "b" },
+          { q: "Is there __ water in the bottle?", a: "any", b: "some", c: "many", d: "few", ans: "a" },
+          { q: "We are looking forward to __ you soon.", a: "see", b: "seeing", c: "saw", d: "seen", ans: "b" },
+          { q: "The package was delivered __ noon today.", a: "at", b: "on", c: "in", d: "for", ans: "a" },
+          { q: "She didn't __ to the meeting because she was sick.", a: "come", b: "came", c: "coming", d: "comes", ans: "a" },
+          { q: "He speaks English very __.", a: "good", b: "fluent", c: "well", d: "nice", ans: "c" },
+          { q: "This cake was made __ my grandmother.", a: "from", b: "by", c: "with", d: "of", ans: "b" },
+          { q: "If I __ more time, I would travel more often.", a: "have", b: "had", c: "will have", d: "have had", ans: "b" },
+          { q: "There are __ students in the classroom today.", a: "much", b: "twenty", c: "little", d: "any", ans: "b" },
+          { q: "Please, don't forget to __ your homework.", a: "do", b: "make", c: "create", d: "perform", ans: "a" },
+          { q: "The museum is open __ Tuesday through Sunday.", a: "from", b: "since", c: "between", d: "for", ans: "a" },
+          { q: "He asked me where I __.", a: "live", b: "lived", c: "living", d: "am living", ans: "b" },
+          { q: "She is the __ intelligent student in our class.", a: "more", b: "most", c: "much", d: "great", ans: "b" },
+          { q: "You __ not smoke inside the hospital.", a: "must", b: "would", c: "should", d: "might", ans: "a" },
+          { q: "They have already __ their homework for tomorrow.", a: "finish", b: "finished", c: "finishing", d: "finishes", ans: "b" },
+          { q: "I am not used to __ up so early.", a: "get", b: "got", c: "getting", d: "gets", ans: "c" },
+          { q: "The store closes __ 9:00 PM on weekdays.", a: "at", b: "in", c: "on", d: "for", ans: "a" },
+          { q: "He ran __ fast that he won the race easily.", a: "too", b: "so", c: "very", d: "such", ans: "b" },
+          { q: "Would you mind __ the window, please?", a: "open", b: "opening", c: "to open", d: "opened", ans: "b" },
+          { q: "This is the place __ we first met.", a: "which", b: "where", c: "that", d: "when", ans: "b" },
+          { q: "He doesn't like coffee, and __ do I.", a: "either", b: "neither", c: "so", d: "too", ans: "b" },
+          { q: "We need to buy __ new furniture for the office.", a: "a", b: "some", c: "many", d: "few", ans: "b" },
+          { q: "The car was __ damaged in the accident.", a: "bad", b: "badly", c: "worse", d: "worst", ans: "b" },
+          { q: "She turned __ the offer because the salary was too low.", a: "down", b: "off", c: "out", d: "up", ans: "a" },
+          { q: "Have you ever __ to London before?", a: "be", b: "been", c: "was", d: "were", ans: "b" },
+          { q: "He was tired, __ he went to bed early.", a: "because", b: "so", c: "but", d: "although", ans: "b" }
+        ]
+      },
+      {
+        title: "Test 3",
+        questions: [
+          { q: "I will call you as soon as I __ home.", a: "get", b: "will get", c: "got", d: "getting", ans: "a" },
+          { q: "She enjoys __ books in her free time.", a: "read", b: "reading", c: "to read", d: "reads", ans: "b" },
+          { q: "There is __ ice in the freezer if you need it.", a: "some", b: "many", c: "few", d: "a", ans: "a" },
+          { q: "He drove __ than usual because of the heavy fog.", a: "slow", b: "slower", c: "slowest", d: "slowly", ans: "b" },
+          { q: "The meeting has been postponed __ next Monday.", a: "until", b: "since", c: "for", d: "at", ans: "a" },
+          { q: "You __ see a dentist if your tooth hurts.", a: "ought to", b: "would", c: "could", d: "may", ans: "a" },
+          { q: "She works as __ nurse at the local hospital.", a: "a", b: "an", c: "the", d: "no article", ans: "a" },
+          { q: "He didn't notice the sign, __ he drove right past it.", a: "so", b: "because", c: "but", d: "although", ans: "a" },
+          { q: "The letters __ sent yesterday afternoon.", a: "were", b: "was", c: "are", d: "have been", ans: "a" },
+          { q: "I am writing to inquire __ the job position.", a: "about", b: "on", c: "for", d: "with", ans: "a" },
+          { q: "If you study hard, you __ pass the examination.", a: "will", b: "would", c: "did", d: "had", ans: "a" },
+          { q: "He lives __ the third floor of the apartment building.", a: "on", b: "in", c: "at", d: "to", ans: "a" },
+          { q: "Neither of the boys __ present at the practice session.", a: "was", b: "were", c: "are", d: "have been", ans: "a" },
+          { q: "She speaks three languages __.", a: "fluent", b: "fluently", c: "fluency", d: "more fluent", ans: "b" },
+          { q: "We have lived in this town __ ten years now.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
+          { q: "Do you know the reason __ the train was delayed?", a: "why", b: "which", c: "where", d: "how", ans: "a" },
+          { q: "He promised __ me with my math homework tonight.", a: "to help", b: "helping", c: "help", d: "helped", ans: "a" },
+          { q: "There are too __ cars on the road during rush hour.", a: "many", b: "much", c: "lots", d: "amount", ans: "a" },
+          { q: "She was surprised __ the sudden change in plans.", a: "by", b: "for", c: "with", d: "on", ans: "a" },
+          { q: "The doctor advised him to give __ smoking.", a: "up", b: "off", c: "out", d: "away", ans: "a" },
+          { q: "He didn't have __ time to complete the final section.", a: "enough", b: "too", c: "many", d: "several", ans: "a" },
+          { q: "While I __ reading, the phone rang twice.", a: "was", b: "am", c: "were", d: "been", ans: "a" },
+          { q: "This computer is __ expensive than the other model.", a: "more", b: "most", c: "much", d: "very", ans: "a" },
+          { q: "She apologized __ being late to the interview.", a: "for", b: "about", c: "at", d: "on", ans: "a" },
+          { q: "He can play the guitar, but he __ play the piano.", a: "cannot", b: "couldn't", c: "mustn't", d: "shouldn't", ans: "a" },
+          { q: "They went on a picnic despite __ bad weather.", a: "the", b: "a", c: "an", d: "no article", ans: "a" },
+          { q: "The building was completely destroyed __ the fire.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
+          { q: "I would rather stay home __ go out tonight.", a: "than", b: "then", c: "to", d: "from", ans: "a" },
+          { q: "She has __ completed her master's degree program.", a: "successfully", b: "successful", c: "success", d: "succeed", ans: "a" },
+          { q: "By next month, we __ finished this project.", a: "will have", b: "will be", c: "have", d: "had", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 4",
+        questions: [
+          { q: "He asked me if I __ seen his missing keys.", a: "had", b: "have", c: "has", d: "having", ans: "a" },
+          { q: "She insists __ paying for her own meal.", a: "on", b: "in", c: "at", d: "for", ans: "a" },
+          { q: "The harder you work, the __ progress you make.", a: "more", b: "most", c: "much", d: "greater", ans: "a" },
+          { q: "They were not allowed __ the room without permission.", a: "to enter", b: "entering", c: "enter", d: "entered", ans: "a" },
+          { q: "He has a lot of experience __ civil engineering.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
+          { q: "She took an umbrella in case it __ later.", a: "rained", b: "will rain", c: "rains", d: "raining", ans: "a" },
+          { q: "The traffic was heavy; __, we arrived on time.", a: "however", b: "because", c: "so", d: "although", ans: "a" },
+          { q: "He is capable __ managing large-scale projects.", a: "of", b: "in", c: "at", d: "for", ans: "a" },
+          { q: "They haven't decided where __ for their vacation.", a: "to go", b: "going", c: "go", d: "went", ans: "a" },
+          { q: "She works __ hard as her older brother.", a: "as", b: "so", c: "like", d: "than", ans: "a" },
+          { q: "The flight was canceled due __ severe weather conditions.", a: "to", b: "for", c: "with", d: "at", ans: "a" },
+          { q: "He spoke so quietly that I could __ hear him.", a: "barely", b: "clearly", c: "easily", d: "hard", ans: "a" },
+          { q: "She suggested __ to the museum this afternoon.", a: "going", b: "to go", c: "go", d: "went", ans: "a" },
+          { q: "The contract was signed __ both parties yesterday.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
+          { q: "He has been absent __ school for three days.", a: "from", b: "at", c: "in", d: "to", ans: "a" },
+          { q: "She is not old __ to drive a car legally.", a: "enough", b: "too", c: "so", d: "very", ans: "a" },
+          { q: "If I __ you, I would accept that job offer immediately.", a: "were", b: "was", c: "am", d: "been", ans: "a" },
+          { q: "He ran out of gas because he had forgotten to __ the tank.", a: "fill", b: "fuel", c: "pour", d: "load", ans: "a" },
+          { q: "She prefers tea __ coffee in the morning.", a: "to", b: "than", c: "over", d: "from", ans: "a" },
+          { q: "The news report was __ detailed and informative.", a: "very", b: "too", c: "such", d: "so", ans: "a" },
+          { q: "He was punished for __ breaking the classroom rules.", a: "intentionally", b: "intentional", c: "intention", d: "intend", ans: "a" },
+          { q: "She doesn't know how __ the new software program.", a: "to use", b: "using", c: "use", d: "used", ans: "a" },
+          { q: "The box was __ heavy for one person to lift.", a: "too", b: "so", c: "very", d: "much", ans: "a" },
+          { q: "He succeeded __ passing the entrance examination.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
+          { q: "She was looking forward to __ her family again.", a: "seeing", b: "see", c: "saw", d: "seen", ans: "a" },
+          { q: "The concert was postponed __ the lead singer was ill.", a: "because", b: "because of", c: "due to", d: "despite", ans: "a" },
+          { q: "He is famous __ his contributions to science.", a: "for", b: "about", c: "with", d: "in", ans: "a" },
+          { q: "She always keeps her desk __ and organized.", a: "clean", b: "cleanly", c: "cleanness", d: "cleaning", ans: "a" },
+          { q: "They have been friends __ childhood.", a: "since", b: "for", c: "from", d: "during", ans: "a" },
+          { q: "He left the office without __ goodbye to anyone.", a: "saying", b: "say", c: "said", d: "to say", ans: "a" }
+        ]
+      },
+      {
+        title: "Test 5",
+        questions: [
+          { q: "She congratulated him __ passing his driving test.", a: "on", b: "for", c: "about", d: "at", ans: "a" },
+          { q: "The committee has made __ final decision on the matter.", a: "its", b: "it's", c: "their", d: "they're", ans: "a" },
+          { q: "He acts as if he __ everything about the subject.", a: "knew", b: "knows", c: "know", d: "has known", ans: "a" },
+          { q: "She was accused __ stealing the company funds.", a: "of", b: "for", c: "with", d: "about", ans: "a" },
+          { q: "The weather was terrible; __, we enjoyed our trip.", a: "nevertheless", b: "therefore", c: "because", d: "so", ans: "a" },
+          { q: "He prevented the child __ falling off the chair.", a: "from", b: "to", c: "of", d: "with", ans: "a" },
+          { q: "She had no difficulty __ finding the correct address.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
+          { q: "The report contains a detailed __ of the events.", a: "description", b: "describe", c: "descriptive", d: "describingly", ans: "a" },
+          { q: "He turned up late __ traffic was extremely heavy.", a: "because", b: "despite", c: "in spite of", d: "due to", ans: "a" },
+          { q: "She is accustomed __ working under pressure.", a: "to", b: "with", c: "at", d: "for", ans: "a" },
+          { q: "The problem was solved __ the team's hard work.", a: "through", b: "across", c: "along", d: "over", ans: "a" },
+          { q: "He insisted that the rules __ strictly followed.", a: "be", b: "are", c: "were", d: "is", ans: "a" },
+          { q: "She was astonished __ the size of the new building.", a: "at", b: "with", c: "for", d: "in", ans: "a" },
+          { q: "The movie was so boring that I fell __ during it.", a: "asleep", b: "sleeping", c: "sleepy", d: "slept", ans: "a" },
+          { q: "He refused __ the document without reading it first.", a: "to sign", b: "signing", c: "sign", d: "signed", ans: "a" },
+          { q: "She has been working here __ a long period of time.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
+          { q: "The plan was approved __ all members of the board.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
+          { q: "He spoke with great __ during his presentation.", a: "confidence", b: "confident", c: "confidently", d: "confide", ans: "a" },
+          { q: "She avoided __ any comments about the issue.", a: "making", b: "to make", c: "make", d: "made", ans: "a" },
+          { q: "The results were far better than we had __.", a: "expected", b: "expecting", c: "expect", d: "expects", ans: "a" },
+          { q: "He was held responsible __ the damage to the car.", a: "for", b: "about", c: "with", d: "to", ans: "a" },
+          { q: "She walked past him without __ noticing him.", a: "even", b: "ever", c: "just", d: "still", ans: "a" },
+          { q: "The instructions were clear enough for anyone __.", a: "to understand", b: "understanding", c: "understand", d: "understood", ans: "a" },
+          { q: "He is not only smart __ also very hard-working.", a: "but", b: "and", c: "or", d: "so", ans: "a" },
+          { q: "She managed to complete the task __ time constraints.", a: "despite", b: "although", c: "even though", d: "because", ans: "a" },
+          { q: "The company has expanded its business __ recent years.", a: "in", b: "on", c: "at", d: "for", ans: "a" },
+          { q: "He was warned __ making the same mistake again.", a: "against", b: "from", c: "about", d: "for", ans: "a" },
+          { q: "She plays the piano remarkably __ for her age.", a: "well", b: "good", c: "best", d: "better", ans: "a" },
+          { q: "They decided to delay the trip __ bad weather.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
+          { q: "He was delighted __ his test results.", a: "with", b: "at", c: "for", d: "on", ans: "a" }
+        ]
+      }
+    ];
+
+    let currentTest = 0, currentQ = 0, answers = [], answered = [];
+
+    function startTest(idx) {
+      currentTest = idx;
+      currentQ = 0;
+      const qCount = TESTS[idx].questions.length;
+      answers = new Array(qCount).fill(null);
+      answered = new Array(qCount).fill(false);
+      document.getElementById('selector').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      document.getElementById('quizTitle').textContent = ⁠ Book 4 — ${TESTS[idx].title} ⁠;
+      renderQ();
+    }
+
+    function renderQ() {
+      const qData = TESTS[currentTest].questions[currentQ];
+      const total = TESTS[currentTest].questions.length;
+      document.getElementById('quizSub').textContent = ⁠ Q${currentQ + 1} of ${total} ⁠;
+      document.getElementById('qMeta').textContent = ⁠ Question ${currentQ + 1} ⁠;
+      document.getElementById('qText').textContent = qData.q;
+      document.getElementById('progressBar').style.width = ⁠ ${((currentQ + 1) / total) * 100}% ⁠;
+      const opts = [
+        { key: 'a', text: qData.a },
+        { key: 'b', text: qData.b },
+        { key: 'c', text: qData.c },
+        { key: 'd', text: qData.d }
+      ];
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        if (answered[currentQ]) {
+          btn.disabled = true;
+          if (opt.key === qData.ans) btn.classList.add('correct');
+          else if (answers[currentQ] === opt.key) btn.classList.add('wrong');
+        } else {
+          btn.onclick = () => selectAnswer(opt.key);
+        }
+        btn.innerHTML = ⁠ <span class="opt-letter">${opt.key.toUpperCase()}</span><span>${opt.text}</span> ⁠;
+        container.appendChild(btn);
+      });
+      document.getElementById('prevBtn').disabled = currentQ === 0;
+      document.getElementById('nextBtn').textContent = currentQ === total - 1 ? 'Finish →' : 'Next →';
+    }
+
+    function selectAnswer(letter) {
+      if (answered[currentQ]) return;
+      answers[currentQ] = letter;
+      answered[currentQ] = true;
+      renderQ();
+    }
+
+    function nextQ() {
+      const total = TESTS[currentTest].questions.length;
+      if (!answered[currentQ]) {
+        alert('Please select an answer before moving forward.');
+        return;
+      }
+      if (currentQ < total - 1) {
+        currentQ++;
+        renderQ();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) {
+        currentQ--;
+        renderQ();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+      const qList = TESTS[currentTest].questions;
+      let score = 0;
+      const wrongs = [];
+      qList.forEach((q, i) => {
+        if (answers[i] === q.ans) score++;
+        else wrongs.push({ idx: i + 1, q: q.q, userAns: answers[i], correctAns: q.ans, correctText: q[q.ans] });
+      });
+      const pass = score >= 24;
+      document.getElementById('resultScore').textContent = score;
+      const badge = document.getElementById('resultBadge');
+      badge.textContent = pass ? 'PASSED' : 'NOT PASSED';
+      badge.className = ⁠ result-badge ${pass ? 'pass' : 'fail'} ⁠;
+      document.getElementById('resultMsg').textContent = pass
+        ? 'Excellent! You reached the passing score for Book 4.'
+        : 'Keep practicing! Review your mistakes below and try again.';
+      document.getElementById('resultEmoji').textContent = pass ? '🎉' : '📚';
+      const rList = document.getElementById('reviewList');
+      if (wrongs.length === 0) {
+        rList.innerHTML = '<h3>Review</h3><p style="color:var(--green);font-size:14px;">Perfect score! No mistakes.</p>';
+      } else {
+        rList.innerHTML = ⁠ <h3>Mistakes to Review (${wrongs.length})</h3> ⁠ +
+          wrongs.map(w => `
+            <div class="review-item">
+              <span class="review-icon">❌</span>
+              <div class="review-q"><b>Q${w.idx}:</b> ${w.q}<br>
+                <span class="review-ans wrong">Your answer: ${w.userAns ? w.userAns.toUpperCase() : 'None'}</span> | 
+                <span class="review-ans correct">Correct: ${w.correctAns.toUpperCase()} (${w.correctText})</span>
+              </div>
+            </div>
+          `).join('');
+      }
+    }
+
+    function retryTest() { startTest(currentTest); }
+    function backToSelector() {
+      document.getElementById('selector').style.display = 'block';
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
