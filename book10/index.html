@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book 10 - Hit the 60s</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .test-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .option-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .option-btn.selected {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .footer-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .passed {
+            color: var(--success-color);
+        }
+
+        .failed {
+            color: var(--danger-color);
+        }
+
+        .review-section {
+            margin-top: 20px;
+            text-align: left;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="home-screen">
+        <h1>Book 10 - Hit the 60s</h1>
+        <p style="text-align: center;">اختر الاختبار لبدء التدريب (درجة النجاح: 24/30)</p>
+        <div class="test-selection">
+            <button class="btn" onclick="startQuiz(1)">Test 1</button>
+            <button class="btn" onclick="startQuiz(2)">Test 2</button>
+            <button class="btn" onclick="startQuiz(3)">Test 3</button>
+            <button class="btn" onclick="startQuiz(4)">Test 4</button>
+            <button class="btn" onclick="startQuiz(5)">Test 5</button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="quiz-container">
+        <h2 id="quiz-title">Test</h2>
+        <div id="question-container"></div>
+        <div class="footer-controls">
+            <button class="btn" style="width: 48%;" onclick="previousQuestion()">السابق</button>
+            <button class="btn" style="width: 48%;" id="next-btn" onclick="nextQuestion()">التالي</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="result-container">
+        <h2>نتيجة الاختبار</h2>
+        <h3 id="score-text"></h3>
+        <h4 id="status-text"></h4>
+        <button class="btn" onclick="showReview()">مراجعة الأخطاء</button>
+        <button class="btn" style="margin-top: 10px; background-color: var(--primary-color);" onclick="goHome()">الرئيسية</button>
+        <div id="review-container" class="review-section"></div>
+    </div>
+</div>
+
+<script>
+    const quizData = {
+        1: [
+            { q: "1. She ___ to the store yesterday.", options: ["go", "went", "gone", "going"], answer: 1 },
+            { q: "2. They ___ English for three years.", options: ["study", "studied", "have been studying", "are study"], answer: 2 },
+            { q: "3. Choose the correct synonym for 'Rapid':", options: ["Slow", "Fast", "Weak", "Heavy"], answer: 1 },
+            { q: "4. If it rains, we ___ stay inside.", options: ["will", "would", "had", "are"], answer: 0 },
+            { q: "5. The book is ___ the table.", options: ["on", "in", "at", "to"], answer: 0 }
+        ],
+        2: [
+            { q: "1. I haven't seen him ___ last week.", options: ["for", "since", "from", "during"], answer: 1 },
+            { q: "2. He is ___ than his brother.", options: ["tall", "taller", "tallest", "more tall"], answer: 1 },
+            { q: "3. Choose the antonym for 'Ancient':", options: ["Old", "Modern", "Historic", "Aged"], answer: 1 },
+            { q: "4. What ___ you doing when I called?", options: ["are", "were", "was", "did"], answer: 1 },
+            { q: "5. She enjoys ___ books in her free time.", options: ["read", "reading", "to read", "reads"], answer: 1 }
+        ]
+    };
+
+    // تعبئة بقية الاختبارات تلقائياً لنفس الهيكل
+    for (let i = 1; i <= 5; i++) {
+        if (!quizData[i]) {
+            quizData[i] = [];
+            for (let j = 1; j <= 30; j++) {
+                quizData[i].push({
+                    q: ⁠ ${j}. Sample Question ${j} for Test ${i} ⁠,
+                    options: ["Option A", "Option B", "Option C", "Option D"],
+                    answer: 0
+                });
+            }
+        } else {
+            while (quizData[i].length < 30) {
+                let num = quizData[i].length + 1;
+                quizData[i].push({
+                    q: ⁠ ${num}. Sample Question ${num} for Test ${i} ⁠,
+                    options: ["Option A", "Option B", "Option C", "Option D"],
+                    answer: 0
+                });
+            }
+        }
+    }
+
+    let currentTest = 1;
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    function startQuiz(testNum) {
+        currentTest = testNum;
+        currentQuestionIndex = 0;
+        userAnswers = new Array(quizData[testNum].length).fill(null);
+        
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('quiz-title').innerText = ⁠ Test ${testNum} ⁠;
+        
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const qData = quizData[currentTest][currentQuestionIndex];
+        const container = document.getElementById('question-container');
+        
+        container.innerHTML = `
+            <div class="question-card">
+                <div class="question-text">${qData.q}</div>
+                <div class="options">
+                    ${qData.options.map((opt, idx) => `
+                        <button class="option-btn ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}" 
+                                onclick="selectOption(${idx})">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('next-btn').innerText = 
+            (currentQuestionIndex === quizData[currentTest].length - 1) ? "إنهاء الاختبار" : "التالي";
+    }
+
+    function selectOption(index) {
+        userAnswers[currentQuestionIndex] = index;
+        renderQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < quizData[currentTest].length - 1) {
+            currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            calculateResult();
+        }
+    }
+
+    function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+        }
+    }
+
+    function calculateResult() {
+        let score = 0;
+        const total = quizData[currentTest].length;
+        
+        quizData[currentTest].forEach((q, idx) => {
+            if (userAnswers[idx] === q.answer) {
+                score++;
+            }
+        });
+
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        document.getElementById('score-text').innerText = ⁠ النتيجة: ${score} من ${total} ⁠;
+        
+        const statusText = document.getElementById('status-text');
+        if (score >= 24) {
+            statusText.innerText = "مبروك! لقد اجتزت الاختبار بنجاح 🎉";
+            statusText.className = "passed";
+        } else {
+            statusText.innerText = "للأسف لم تتجاوز نسبة النجاح (المطلوب 24) ❌";
+            statusText.className = "failed";
+        }
+    }
+
+    function showReview() {
+        const reviewContainer = document.getElementById('review-container');
+        reviewContainer.innerHTML = "<h3>مراجعة الإجابات:</h3>";
+
+        quizData[currentTest].forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            const isCorrect = userAns === q.answer;
+
+            reviewContainer.innerHTML += `
+                <div style="margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ccc;">
+                    <strong>${q.q}</strong><br>
+                    <span style="color: ${isCorrect ? 'green' : 'red'};">
+                        إجابتك: ${userAns !== null ? q.options[userAns] : 'لم يتم الإجابة'}
+                    </span><br>
+                    ${!isCorrect ? ⁠ <span style="color: green;">الإجابة الصحيحة: ${q.options[q.answer]}</span> ⁠ : ''}
+                </div>
+            `;
+        });
+    }
+
+    function goHome() {
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('home-screen').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
