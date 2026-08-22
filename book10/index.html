@@ -1,328 +1,331 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book 10 - Hit the 60s</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --background-color: #f8f9fa;
-            --card-background: #ffffff;
-            --text-color: #333333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--card-background);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--primary-color);
-        }
-
-        .test-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .quiz-container {
-            display: none;
-        }
-
-        .question-card {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .question-text {
-            font-weight: bold;
-            margin-bottom: 10px;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .option-btn {
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .option-btn.selected {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .option-btn.correct {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .option-btn.wrong {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .footer-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .result-container {
-            display: none;
-            text-align: center;
-        }
-
-        .passed {
-            color: var(--success-color);
-        }
-
-        .failed {
-            color: var(--danger-color);
-        }
-
-        .review-section {
-            margin-top: 20px;
-            text-align: left;
-            direction: ltr;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hit the 60s — Book 10</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--navy:#1F3864;--blue:#2E75B6;--red:#C00000;--green:#00B050;--gold:#F4A800;--bg:#F0F4FA;--card:#FFFFFF;--text:#1a1a2e;--muted:#6B7280;--border:#E2E8F0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.logo-badge{background:var(--gold);color:var(--navy);font-weight:800;font-size:13px;padding:4px 10px;border-radius:6px;}
+header h1{color:#fff;font-size:18px;font-weight:700;}
+header span{color:#94A3B8;font-size:13px;margin-left:auto;}
+.container{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+#selector{text-align:center;padding:40px 20px;}
+#selector h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+#selector p{color:var(--muted);font-size:14px;margin-bottom:32px;}
+.test-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:400px;margin:0 auto;}
+.test-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:18px 8px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.test-btn:hover{border-color:var(--blue);background:#EEF4FF;transform:translateY(-2px);}
+.test-btn .num{font-size:24px;font-weight:800;color:var(--navy);}
+.test-btn .lbl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
+#quiz{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--blue);font-size:14px;font-weight:600;padding:6px 0;}
+.quiz-title{font-size:18px;font-weight:800;color:var(--navy);}
+.quiz-sub{font-size:12px;color:var(--muted);margin-left:auto;}
+.progress-wrap{background:var(--border);border-radius:99px;height:6px;margin-bottom:24px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:99px;transition:width 0.4s ease;}
+.q-card{background:var(--card);border-radius:16px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;}
+.q-num{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.q-text{font-size:17px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:24px;}
+.choices{display:flex;flex-direction:column;gap:10px;}
+.choice{display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.18s;background:#FAFBFC;}
+.choice:hover:not(.locked){border-color:var(--blue);background:#EEF4FF;}
+.choice-letter{width:32px;height:32px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0;}
+.choice-text{font-size:15px;color:var(--text);flex:1;}
+.choice.correct{border-color:var(--green);background:#F0FDF4;}
+.choice.correct .choice-letter{background:var(--green);color:#fff;}
+.choice.wrong{border-color:var(--red);background:#FFF0F0;}
+.choice.wrong .choice-letter{background:var(--red);color:#fff;}
+.choice.selected{border-color:var(--blue);background:#EEF4FF;}
+.choice.selected .choice-letter{background:var(--blue);color:#fff;}
+.choice.locked{cursor:default;}
+.feedback{display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;}
+.feedback.correct-fb{background:#F0FDF4;color:var(--green);border:1px solid #BBF7D0;display:block;}
+.feedback.wrong-fb{background:#FFF0F0;color:var(--red);border:1px solid #FECACA;display:block;}
+.nav-row{display:flex;gap:10px;margin-top:6px;}
+.nav-btn{flex:1;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
+.nav-btn.primary{background:var(--navy);color:#fff;}
+.nav-btn.primary:hover{background:var(--blue);}
+.nav-btn.secondary{background:var(--border);color:var(--muted);}
+.nav-btn.secondary:hover{background:#D1D5DB;color:var(--text);}
+.nav-btn:disabled{opacity:0.4;cursor:not-allowed;}
+#results{display:none;}
+.result-card{background:var(--card);border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:20px;}
+.result-emoji{font-size:60px;margin-bottom:16px;display:block;}
+.result-score{font-size:56px;font-weight:800;line-height:1;margin-bottom:4px;}
+.result-score.pass{color:var(--green);}
+.result-score.fail{color:var(--red);}
+.result-label{font-size:14px;color:var(--muted);margin-bottom:16px;}
+.result-badge{display:inline-block;padding:8px 20px;border-radius:99px;font-size:15px;font-weight:700;margin-bottom:20px;}
+.result-badge.pass{background:#F0FDF4;color:var(--green);}
+.result-badge.fail{background:#FFF0F0;color:var(--red);}
+.result-msg{font-size:14px;color:var(--muted);line-height:1.6;}
+.review-list{background:var(--card);border-radius:16px;padding:20px;margin-bottom:20px;}
+.review-list h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
+.review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.review-item:last-child{border-bottom:none;}
+.review-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.review-q{font-size:13px;color:var(--text);flex:1;}
+.review-ans{font-size:12px;font-weight:600;}
+.review-ans.wrong{color:var(--red);}
+.correct-ans{color:var(--green);}
+.result-actions{display:flex;flex-direction:column;gap:10px;}
+.action-btn{padding:15px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
+.action-btn.primary{background:var(--navy);color:#fff;}
+.action-btn.primary:hover{background:var(--blue);}
+.action-btn.outline{background:none;border:2px solid var(--border);color:var(--muted);}
+.action-btn.outline:hover{border-color:var(--blue);color:var(--blue);}
+.page-footer{text-align:center;margin-top:40px;font-size:13px;color:#800020;font-weight:700;white-space:nowrap;}
+</style>
 </head>
 <body>
-
+<header>
+  <div class="logo-badge">HIT THE 60s</div>
+  <h1>Book 10 — Practice Tests</h1>
+  <span>ALC Prep Course</span>
+</header>
 <div class="container">
-    <div id="home-screen">
-        <h1>Book 10 - Hit the 60s</h1>
-        <p style="text-align: center;">اختر الاختبار لبدء التدريب (درجة النجاح: 24/30)</p>
-        <div class="test-selection">
-            <button class="btn" onclick="startQuiz(1)">Test 1</button>
-            <button class="btn" onclick="startQuiz(2)">Test 2</button>
-            <button class="btn" onclick="startQuiz(3)">Test 3</button>
-            <button class="btn" onclick="startQuiz(4)">Test 4</button>
-            <button class="btn" onclick="startQuiz(5)">Test 5</button>
-        </div>
+  <div id="selector">
+    <h2>Book Ten</h2>
+    <p>Choose a test to begin. Pass score: 24 / 30</p>
+    <div class="test-grid">
+      <div class="test-btn" onclick="startTest(0)"><span class="num">1</span><span class="lbl">Test</span></div>
+      <div class="test-btn" onclick="startTest(1)"><span class="num">2</span><span class="lbl">Test</span></div>
+      <div class="test-btn" onclick="startTest(2)"><span class="num">3</span><span class="lbl">Test</span></div>
+      <div class="test-btn" onclick="startTest(3)"><span class="num">4</span><span class="lbl">Test</span></div>
+      <div class="test-btn" onclick="startTest(4)"><span class="num">5</span><span class="lbl">Test</span></div>
     </div>
-
-    <div id="quiz-screen" class="quiz-container">
-        <h2 id="quiz-title">Test</h2>
-        <div id="question-container"></div>
-        <div class="footer-controls">
-            <button class="btn" style="width: 48%;" onclick="previousQuestion()">السابق</button>
-            <button class="btn" style="width: 48%;" id="next-btn" onclick="nextQuestion()">التالي</button>
-        </div>
+  </div>
+  <div id="quiz">
+    <div class="quiz-header">
+      <button class="back-btn" onclick="backToSelector()">← Back</button>
+      <span class="quiz-title" id="quizTitle"></span>
+      <span class="quiz-sub">Pass: 24/30</span>
     </div>
-
-    <div id="result-screen" class="result-container">
-        <h2>نتيجة الاختبار</h2>
-        <h3 id="score-text"></h3>
-        <h4 id="status-text"></h4>
-        <button class="btn" onclick="showReview()">مراجعة الأخطاء</button>
-        <button class="btn" style="margin-top: 10px; background-color: var(--primary-color);" onclick="goHome()">الرئيسية</button>
-        <div id="review-container" class="review-section"></div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-card">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
     </div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" id="prevBtn" onclick="prevQ()">← Prev</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="nextQ()">Next →</button>
+    </div>
+  </div>
+  <div id="results">
+    <div class="result-card">
+      <span class="result-emoji" id="resultEmoji"></span>
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-label">out of 30 questions</div>
+      <div class="result-badge" id="resultBadge"></div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+    <div class="result-actions">
+      <button class="action-btn primary" onclick="retryTest()">🔄 Try Again</button>
+      <button class="action-btn outline" onclick="backToSelector()">← Choose Another Test</button>
+    </div>
+  </div>
+  <div class="page-footer">
+    Prepared by Khalid Alameer | Western Naval Aviation Group | "Hit the 60s"
+  </div>
 </div>
-
 <script>
-    const quizData = {
-        1: [
-            { q: "1. She ___ to the store yesterday.", options: ["go", "went", "gone", "going"], answer: 1 },
-            { q: "2. They ___ English for three years.", options: ["study", "studied", "have been studying", "are study"], answer: 2 },
-            { q: "3. Choose the correct synonym for 'Rapid':", options: ["Slow", "Fast", "Weak", "Heavy"], answer: 1 },
-            { q: "4. If it rains, we ___ stay inside.", options: ["will", "would", "had", "are"], answer: 0 },
-            { q: "5. The book is ___ the table.", options: ["on", "in", "at", "to"], answer: 0 }
-        ],
-        2: [
-            { q: "1. I haven't seen him ___ last week.", options: ["for", "since", "from", "during"], answer: 1 },
-            { q: "2. He is ___ than his brother.", options: ["tall", "taller", "tallest", "more tall"], answer: 1 },
-            { q: "3. Choose the antonym for 'Ancient':", options: ["Old", "Modern", "Historic", "Aged"], answer: 1 },
-            { q: "4. What ___ you doing when I called?", options: ["are", "were", "was", "did"], answer: 1 },
-            { q: "5. She enjoys ___ books in her free time.", options: ["read", "reading", "to read", "reads"], answer: 1 }
-        ]
-    };
+const BOOK_TITLE = "Book 10";
+const TESTS = [
+  {
+    "title": "Test 1",
+    "questions": [
+      {"q": "Sam knows how ____ swim.", "ch": ["A) swim", "B) swimming", "C) to swim", "D) swam"], "a": "C"},
+      {"q": "She taught him how ____ use the machine.", "ch": ["A) use", "B) using", "C) to use", "D) used"], "a": "C"},
+      {"q": "Can you show me how ____ change a tire?", "ch": ["A) change", "B) changing", "C) to change", "D) changed"], "a": "C"},
+      {"q": "____ you insert the coin, make your selection.", "ch": ["A) While", "B) Until", "C) Before", "D) After"], "a": "D"},
+      {"q": "____ using the machine, read the instructions.", "ch": ["A) After", "B) Until", "C) Before", "D) When"], "a": "C"},
+      {"q": "Wait ____ the machine beeps.", "ch": ["A) after", "B) before", "C) while", "D) until"], "a": "D"},
+      {"q": "You're ____ to insert exact change.", "ch": ["A) able", "B) supposed", "C) going", "D) ready"], "a": "B"},
+      {"q": "He's ____ to report at 0600.", "ch": ["A) able", "B) going", "C) supposed", "D) ready"], "a": "C"},
+      {"q": "We're ____ to go.", "ch": ["A) suppose", "B) able", "C) ready", "D) supposed"], "a": "C"},
+      {"q": "She's ____ to take the escalator.", "ch": ["A) happy", "B) glad", "C) afraid", "D) ready"], "a": "C"},
+      {"q": "She enjoys ____.", "ch": ["A) sing", "B) to sing", "C) sang", "D) singing"], "a": "D"},
+      {"q": "Did you finish ____ the tire?", "ch": ["A) change", "B) to change", "C) changing", "D) changed"], "a": "C"},
+      {"q": "Do you mind ____ me?", "ch": ["A) help", "B) to help", "C) helped", "D) helping"], "a": "D"},
+      {"q": "The machine is ____ to the elevator.", "ch": ["A) across", "B) next", "C) behind", "D) above"], "a": "B"},
+      {"q": "The parking lot is ____ the mall.", "ch": ["A) next", "B) above", "C) below", "D) behind"], "a": "D"},
+      {"q": "The store ____ at 0900 tomorrow.", "ch": ["A) will open", "B) opens", "C) is opening", "D) Both B and C"], "a": "D"},
+      {"q": "____ you help me? — Certainly.", "ch": ["A) Can", "B) Will", "C) Could", "D) All of the above"], "a": "D"},
+      {"q": "He said ____ stop.", "ch": ["A) to", "B) for", "C) at", "D) in"], "a": "A"},
+      {"q": "He ____ to fix cars.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "She ____ to drive to Dallas.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "How far is it to New York? — ____ 60 miles.", "ch": ["A) They're", "B) He's", "C) It's", "D) She's"], "a": "C"},
+      {"q": "How long does it ____ to drive there?", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "A"},
+      {"q": "____ 35 degrees Celsius today.", "ch": ["A) They're", "B) He's", "C) She's", "D) It's"], "a": "D"},
+      {"q": "The vending machine is ____.", "ch": ["A) out of order", "B) out of exact", "C) out of stuck", "D) out of popular"], "a": "A"},
+      {"q": "____ a coin into the slot.", "ch": ["A) Lift", "B) Insert", "C) Operate", "D) Dispense"], "a": "B"},
+      {"q": "The coin ____ in the machine.", "ch": ["A) lifted", "B) inserted", "C) stuck", "D) dispensed"], "a": "C"},
+      {"q": "Use the wrench to ____ the lug nuts.", "ch": ["A) inflate", "B) raise", "C) lower", "D) loosen"], "a": "D"},
+      {"q": "The spare tire is in the ____.", "ch": ["A) jack", "B) wrench", "C) trunk", "D) wheel"], "a": "C"},
+      {"q": "Take the ____ to the third floor.", "ch": ["A) stairs", "B) escalator", "C) elevator", "D) All of the above"], "a": "D"},
+      {"q": "How far is it to the airport? — It ____ 30 minutes.", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "B"}
+    ]
+  },
+  {
+    "title": "Test 2",
+    "questions": [
+      {"q": "Sam knows how ____ swim.", "ch": ["A) swim", "B) swimming", "C) to swim", "D) swam"], "a": "C"},
+      {"q": "She taught him how ____ use the machine.", "ch": ["A) use", "B) using", "C) to use", "D) used"], "a": "C"},
+      {"q": "Can you show me how ____ change a tire?", "ch": ["A) change", "B) changing", "C) to change", "D) changed"], "a": "C"},
+      {"q": "____ you insert the coin, make your selection.", "ch": ["A) While", "B) Until", "C) Before", "D) After"], "a": "D"},
+      {"q": "____ using the machine, read the instructions.", "ch": ["A) After", "B) Until", "C) Before", "D) When"], "a": "C"},
+      {"q": "Wait ____ the machine beeps.", "ch": ["A) after", "B) before", "C) while", "D) until"], "a": "D"},
+      {"q": "You're ____ to insert exact change.", "ch": ["A) able", "B) supposed", "C) going", "D) ready"], "a": "B"},
+      {"q": "He's ____ to report at 0600.", "ch": ["A) able", "B) going", "C) supposed", "D) ready"], "a": "C"},
+      {"q": "We're ____ to go.", "ch": ["A) suppose", "B) able", "C) ready", "D) supposed"], "a": "C"},
+      {"q": "She's ____ to take the escalator.", "ch": ["A) happy", "B) glad", "C) afraid", "D) ready"], "a": "C"},
+      {"q": "She enjoys ____.", "ch": ["A) sing", "B) to sing", "C) sang", "D) singing"], "a": "D"},
+      {"q": "Did you finish ____ the tire?", "ch": ["A) change", "B) to change", "C) changing", "D) changed"], "a": "C"},
+      {"q": "Do you mind ____ me?", "ch": ["A) help", "B) to help", "C) helped", "D) helping"], "a": "D"},
+      {"q": "The machine is ____ to the elevator.", "ch": ["A) across", "B) next", "C) behind", "D) above"], "a": "B"},
+      {"q": "The parking lot is ____ the mall.", "ch": ["A) next", "B) above", "C) below", "D) behind"], "a": "D"},
+      {"q": "The store ____ at 0900 tomorrow.", "ch": ["A) will open", "B) opens", "C) is opening", "D) Both B and C"], "a": "D"},
+      {"q": "____ you help me? — Certainly.", "ch": ["A) Can", "B) Will", "C) Could", "D) All of the above"], "a": "D"},
+      {"q": "He said ____ stop.", "ch": ["A) to", "B) for", "C) at", "D) in"], "a": "A"},
+      {"q": "He ____ to fix cars.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "She ____ to drive to Dallas.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "How far is it to New York? — ____ 60 miles.", "ch": ["A) They're", "B) He's", "C) It's", "D) She's"], "a": "C"},
+      {"q": "How long does it ____ to drive there?", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "A"},
+      {"q": "____ 35 degrees Celsius today.", "ch": ["A) They're", "B) He's", "C) She's", "D) It's"], "a": "D"},
+      {"q": "The vending machine is ____.", "ch": ["A) out of order", "B) out of exact", "C) out of stuck", "D) out of popular"], "a": "A"},
+      {"q": "____ a coin into the slot.", "ch": ["A) Lift", "B) Insert", "C) Operate", "D) Dispense"], "a": "B"},
+      {"q": "The coin ____ in the machine.", "ch": ["A) lifted", "B) inserted", "C) stuck", "D) dispensed"], "a": "C"},
+      {"q": "Use the wrench to ____ the lug nuts.", "ch": ["A) inflate", "B) raise", "C) lower", "D) loosen"], "a": "D"},
+      {"q": "The spare tire is in the ____.", "ch": ["A) jack", "B) wrench", "C) trunk", "D) wheel"], "a": "C"},
+      {"q": "Take the ____ to the third floor.", "ch": ["A) stairs", "B) escalator", "C) elevator", "D) All of the above"], "a": "D"},
+      {"q": "How far is it to the airport? — It ____ 30 minutes.", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "B"}
+    ]
+  },
+  {
+    "title": "Test 3",
+    "questions": [
+      {"q": "Sam knows how ____ swim.", "ch": ["A) swim", "B) swimming", "C) to swim", "D) swam"], "a": "C"},
+      {"q": "She taught him how ____ use the machine.", "ch": ["A) use", "B) using", "C) to use", "D) used"], "a": "C"},
+      {"q": "Can you show me how ____ change a tire?", "ch": ["A) change", "B) changing", "C) to change", "D) changed"], "a": "C"},
+      {"q": "____ you insert the coin, make your selection.", "ch": ["A) While", "B) Until", "C) Before", "D) After"], "a": "D"},
+      {"q": "____ using the machine, read the instructions.", "ch": ["A) After", "B) Until", "C) Before", "D) When"], "a": "C"},
+      {"q": "Wait ____ the machine beeps.", "ch": ["A) after", "B) before", "C) while", "D) until"], "a": "D"},
+      {"q": "You're ____ to insert exact change.", "ch": ["A) able", "B) supposed", "C) going", "D) ready"], "a": "B"},
+      {"q": "He's ____ to report at 0600.", "ch": ["A) able", "B) going", "C) supposed", "D) ready"], "a": "C"},
+      {"q": "We're ____ to go.", "ch": ["A) suppose", "B) able", "C) ready", "D) supposed"], "a": "C"},
+      {"q": "She's ____ to take the escalator.", "ch": ["A) happy", "B) glad", "C) afraid", "D) ready"], "a": "C"},
+      {"q": "She enjoys ____.", "ch": ["A) sing", "B) to sing", "C) sang", "D) singing"], "a": "D"},
+      {"q": "Did you finish ____ the tire?", "ch": ["A) change", "B) to change", "C) changing", "D) changed"], "a": "C"},
+      {"q": "Do you mind ____ me?", "ch": ["A) help", "B) to help", "C) helped", "D) helping"], "a": "D"},
+      {"q": "The machine is ____ to the elevator.", "ch": ["A) across", "B) next", "C) behind", "D) above"], "a": "B"},
+      {"q": "The parking lot is ____ the mall.", "ch": ["A) next", "B) above", "C) below", "D) behind"], "a": "D"},
+      {"q": "The store ____ at 0900 tomorrow.", "ch": ["A) will open", "B) opens", "C) is opening", "D) Both B and C"], "a": "D"},
+      {"q": "____ you help me? — Certainly.", "ch": ["A) Can", "B) Will", "C) Could", "D) All of the above"], "a": "D"},
+      {"q": "He said ____ stop.", "ch": ["A) to", "B) for", "C) at", "D) in"], "a": "A"},
+      {"q": "He ____ to fix cars.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "She ____ to drive to Dallas.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "How far is it to New York? — ____ 60 miles.", "ch": ["A) They're", "B) He's", "C) It's", "D) She's"], "a": "C"},
+      {"q": "How long does it ____ to drive there?", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "A"},
+      {"q": "____ 35 degrees Celsius today.", "ch": ["A) They're", "B) He's", "C) She's", "D) It's"], "a": "D"},
+      {"q": "The vending machine is ____.", "ch": ["A) out of order", "B) out of exact", "C) out of stuck", "D) out of popular"], "a": "A"},
+      {"q": "____ a coin into the slot.", "ch": ["A) Lift", "B) Insert", "C) Operate", "D) Dispense"], "a": "B"},
+      {"q": "The coin ____ in the machine.", "ch": ["A) lifted", "B) inserted", "C) stuck", "D) dispensed"], "a": "C"},
+      {"q": "Use the wrench to ____ the lug nuts.", "ch": ["A) inflate", "B) raise", "C) lower", "D) loosen"], "a": "D"},
+      {"q": "The spare tire is in the ____.", "ch": ["A) jack", "B) wrench", "C) trunk", "D) wheel"], "a": "C"},
+      {"q": "Take the ____ to the third floor.", "ch": ["A) stairs", "B) escalator", "C) elevator", "D) All of the above"], "a": "D"},
+      {"q": "How far is it to the airport? — It ____ 30 minutes.", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "B"}
+    ]
+  },
+  {
+    "title": "Test 4",
+    "questions": [
+      {"q": "Sam knows how ____ swim.", "ch": ["A) swim", "B) swimming", "C) to swim", "D) swam"], "a": "C"},
+      {"q": "She taught him how ____ use the machine.", "ch": ["A) use", "B) using", "C) to use", "D) used"], "a": "C"},
+      {"q": "Can you show me how ____ change a tire?", "ch": ["A) change", "B) changing", "C) to change", "D) changed"], "a": "C"},
+      {"q": "____ you insert the coin, make your selection.", "ch": ["A) While", "B) Until", "C) Before", "D) After"], "a": "D"},
+      {"q": "____ using the machine, read the instructions.", "ch": ["A) After", "B) Until", "C) Before", "D) When"], "a": "C"},
+      {"q": "Wait ____ the machine beeps.", "ch": ["A) after", "B) before", "C) while", "D) until"], "a": "D"},
+      {"q": "You're ____ to insert exact change.", "ch": ["A) able", "B) supposed", "C) going", "D) ready"], "a": "B"},
+      {"q": "He's ____ to report at 0600.", "ch": ["A) able", "B) going", "C) supposed", "D) ready"], "a": "C"},
+      {"q": "We're ____ to go.", "ch": ["A) suppose", "B) able", "C) ready", "D) supposed"], "a": "C"},
+      {"q": "She's ____ to take the escalator.", "ch": ["A) happy", "B) glad", "C) afraid", "D) ready"], "a": "C"},
+      {"q": "She enjoys ____.", "ch": ["A) sing", "B) to sing", "C) sang", "D) singing"], "a": "D"},
+      {"q": "Did you finish ____ the tire?", "ch": ["A) change", "B) to change", "C) changing", "D) changed"], "a": "C"},
+      {"q": "Do you mind ____ me?", "ch": ["A) help", "B) to help", "C) helped", "D) helping"], "a": "D"},
+      {"q": "The machine is ____ to the elevator.", "ch": ["A) across", "B) next", "C) behind", "D) above"], "a": "B"},
+      {"q": "The parking lot is ____ the mall.", "ch": ["A) next", "B) above", "C) below", "D) behind"], "a": "D"},
+      {"q": "The store ____ at 0900 tomorrow.", "ch": ["A) will open", "B) opens", "C) is opening", "D) Both B and C"], "a": "D"},
+      {"q": "____ you help me? — Certainly.", "ch": ["A) Can", "B) Will", "C) Could", "D) All of the above"], "a": "D"},
+      {"q": "He said ____ stop.", "ch": ["A) to", "B) for", "C) at", "D) in"], "a": "A"},
+      {"q": "He ____ to fix cars.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "She ____ to drive to Dallas.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "How far is it to New York? — ____ 60 miles.", "ch": ["A) They're", "B) He's", "C) It's", "D) She's"], "a": "C"},
+      {"q": "How long does it ____ to drive there?", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "A"},
+      {"q": "____ 35 degrees Celsius today.", "ch": ["A) They're", "B) He's", "C) She's", "D) It's"], "a": "D"},
+      {"q": "The vending machine is ____.", "ch": ["A) out of order", "B) out of exact", "C) out of stuck", "D) out of popular"], "a": "A"},
+      {"q": "____ a coin into the slot.", "ch": ["A) Lift", "B) Insert", "C) Operate", "D) Dispense"], "a": "B"},
+      {"q": "The coin ____ in the machine.", "ch": ["A) lifted", "B) inserted", "C) stuck", "D) dispensed"], "a": "C"},
+      {"q": "Use the wrench to ____ the lug nuts.", "ch": ["A) inflate", "B) raise", "C) lower", "D) loosen"], "a": "D"},
+      {"q": "The spare tire is in the ____.", "ch": ["A) jack", "B) wrench", "C) trunk", "D) wheel"], "a": "C"},
+      {"q": "Take the ____ to the third floor.", "ch": ["A) stairs", "B) escalator", "C) elevator", "D) All of the above"], "a": "D"},
+      {"q": "How far is it to the airport? — It ____ 30 minutes.", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "B"}
+    ]
+  },
+  {
+    "title": "Test 5",
+    "questions": [
+      {"q": "Sam knows how ____ swim.", "ch": ["A) swim", "B) swimming", "C) to swim", "D) swam"], "a": "C"},
+      {"q": "She taught him how ____ use the machine.", "ch": ["A) use", "B) using", "C) to use", "D) used"], "a": "C"},
+      {"q": "Can you show me how ____ change a tire?", "ch": ["A) change", "B) changing", "C) to change", "D) changed"], "a": "C"},
+      {"q": "____ you insert the coin, make your selection.", "ch": ["A) While", "B) Until", "C) Before", "D) After"], "a": "D"},
+      {"q": "____ using the machine, read the instructions.", "ch": ["A) After", "B) Until", "C) Before", "D) When"], "a": "C"},
+      {"q": "Wait ____ the machine beeps.", "ch": ["A) after", "B) before", "C) while", "D) until"], "a": "D"},
+      {"q": "You're ____ to insert exact change.", "ch": ["A) able", "B) supposed", "C) going", "D) ready"], "a": "B"},
+      {"q": "He's ____ to report at 0600.", "ch": ["A) able", "B) going", "C) supposed", "D) ready"], "a": "C"},
+      {"q": "We're ____ to go.", "ch": ["A) suppose", "B) able", "C) ready", "D) supposed"], "a": "C"},
+      {"q": "She's ____ to take the escalator.", "ch": ["A) happy", "B) glad", "C) afraid", "D) ready"], "a": "C"},
+      {"q": "She enjoys ____.", "ch": ["A) sing", "B) to sing", "C) sang", "D) singing"], "a": "D"},
+      {"q": "Did you finish ____ the tire?", "ch": ["A) change", "B) to change", "C) changing", "D) changed"], "a": "C"},
+      {"q": "Do you mind ____ me?", "ch": ["A) help", "B) to help", "C) helped", "D) helping"], "a": "D"},
+      {"q": "The machine is ____ to the elevator.", "ch": ["A) across", "B) next", "C) behind", "D) above"], "a": "B"},
+      {"q": "The parking lot is ____ the mall.", "ch": ["A) next", "B) above", "C) below", "D) behind"], "a": "D"},
+      {"q": "The store ____ at 0900 tomorrow.", "ch": ["A) will open", "B) opens", "C) is opening", "D) Both B and C"], "a": "D"},
+      {"q": "____ you help me? — Certainly.", "ch": ["A) Can", "B) Will", "C) Could", "D) All of the above"], "a": "D"},
+      {"q": "He said ____ stop.", "ch": ["A) to", "B) for", "C) at", "D) in"], "a": "A"},
+      {"q": "He ____ to fix cars.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "She ____ to drive to Dallas.", "ch": ["A) able", "B) is able", "C) can able", "D) was able"], "a": "B"},
+      {"q": "How far is it to New York? — ____ 60 miles.", "ch": ["A) They're", "B) He's", "C) It's", "D) She's"], "a": "C"},
+      {"q": "How long does it ____ to drive there?", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "A"},
+      {"q": "____ 35 degrees Celsius today.", "ch": ["A) They're", "B) He's", "C) She's", "D) It's"], "a": "D"},
+      {"q": "The vending machine is ____.", "ch": ["A) out of order", "B) out of exact", "C) out of stuck", "D) out of popular"], "a": "A"},
+      {"q": "____ a coin into the slot.", "ch": ["A) Lift", "B) Insert", "C) Operate", "D) Dispense"], "a": "B"},
+      {"q": "The coin ____ in the machine.", "ch": ["A) lifted", "B) inserted", "C) stuck", "D) dispensed"], "a": "C"},
+      {"q": "Use the wrench to ____ the lug nuts.", "ch": ["A) inflate", "B) raise", "C) lower", "D) loosen"], "a": "D"},
+      {"q": "The spare tire is in the ____.", "ch": ["A) jack", "B) wrench", "C) trunk", "D) wheel"], "a": "C"},
+      {"q": "Take the ____ to the third floor.", "ch": ["A) stairs", "B) escalator", "C) elevator", "D) All of the above"], "a": "D"},
+      {"q": "How far is it to the airport? — It ____ 30 minutes.", "ch": ["A) take", "B) takes", "C) took", "D) taking"], "a": "B"}
+    ]
+  }
+];
 
-    // تعبئة بقية الاختبارات تلقائياً لنفس الهيكل
-    for (let i = 1; i <= 5; i++) {
-        if (!quizData[i]) {
-            quizData[i] = [];
-            for (let j = 1; j <= 30; j++) {
-                quizData[i].push({
-                    q: ⁠ ${j}. Sample Question ${j} for Test ${i} ⁠,
-                    options: ["Option A", "Option B", "Option C", "Option D"],
-                    answer: 0
-                });
-            }
-        } else {
-            while (quizData[i].length < 30) {
-                let num = quizData[i].length + 1;
-                quizData[i].push({
-                    q: ⁠ ${num}. Sample Question ${num} for Test ${i} ⁠,
-                    options: ["Option A", "Option B", "Option C", "Option D"],
-                    answer: 0
-                });
-            }
-        }
-    }
-
-    let currentTest = 1;
-    let currentQuestionIndex = 0;
-    let userAnswers = [];
-
-    function startQuiz(testNum) {
-        currentTest = testNum;
-        currentQuestionIndex = 0;
-        userAnswers = new Array(quizData[testNum].length).fill(null);
-        
-        document.getElementById('home-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'none';
-        document.getElementById('quiz-screen').style.display = 'block';
-        document.getElementById('quiz-title').innerText = ⁠ Test ${testNum} ⁠;
-        
-        renderQuestion();
-    }
-
-    function renderQuestion() {
-        const qData = quizData[currentTest][currentQuestionIndex];
-        const container = document.getElementById('question-container');
-        
-        container.innerHTML = `
-            <div class="question-card">
-                <div class="question-text">${qData.q}</div>
-                <div class="options">
-                    ${qData.options.map((opt, idx) => `
-                        <button class="option-btn ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}" 
-                                onclick="selectOption(${idx})">
-                            ${opt}
-                        </button>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        document.getElementById('next-btn').innerText = 
-            (currentQuestionIndex === quizData[currentTest].length - 1) ? "إنهاء الاختبار" : "التالي";
-    }
-
-    function selectOption(index) {
-        userAnswers[currentQuestionIndex] = index;
-        renderQuestion();
-    }
-
-    function nextQuestion() {
-        if (currentQuestionIndex < quizData[currentTest].length - 1) {
-            currentQuestionIndex++;
-            renderQuestion();
-        } else {
-            calculateResult();
-        }
-    }
-
-    function previousQuestion() {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            renderQuestion();
-        }
-    }
-
-    function calculateResult() {
-        let score = 0;
-        const total = quizData[currentTest].length;
-        
-        quizData[currentTest].forEach((q, idx) => {
-            if (userAnswers[idx] === q.answer) {
-                score++;
-            }
-        });
-
-        document.getElementById('quiz-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
-        
-        document.getElementById('score-text').innerText = ⁠ النتيجة: ${score} من ${total} ⁠;
-        
-        const statusText = document.getElementById('status-text');
-        if (score >= 24) {
-            statusText.innerText = "مبروك! لقد اجتزت الاختبار بنجاح 🎉";
-            statusText.className = "passed";
-        } else {
-            statusText.innerText = "للأسف لم تتجاوز نسبة النجاح (المطلوب 24) ❌";
-            statusText.className = "failed";
-        }
-    }
-
-    function showReview() {
-        const reviewContainer = document.getElementById('review-container');
-        reviewContainer.innerHTML = "<h3>مراجعة الإجابات:</h3>";
-
-        quizData[currentTest].forEach((q, idx) => {
-            const userAns = userAnswers[idx];
-            const isCorrect = userAns === q.answer;
-
-            reviewContainer.innerHTML += `
-                <div style="margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ccc;">
-                    <strong>${q.q}</strong><br>
-                    <span style="color: ${isCorrect ? 'green' : 'red'};">
-                        إجابتك: ${userAns !== null ? q.options[userAns] : 'لم يتم الإجابة'}
-                    </span><br>
-                    ${!isCorrect ? ⁠ <span style="color: green;">الإجابة الصحيحة: ${q.options[q.answer]}</span> ⁠ : ''}
-                </div>
-            `;
-        });
-    }
-
-    function goHome() {
-        document.getElementById('result-screen').style.display = 'none';
-        document.getElementById('home-screen').style.display = 'block';
-    }
+let currentTest=0,currentQ=0,answers=[],answered=[];
+function startTest(idx){currentTest=idx;currentQ=0;answers=new Array(30).fill(null);answered=new Array(30).fill(false);document.getElementById('selector').style.display='none';document.getElementById('quiz').style.display='block';document.getElementById('results').style.display='none';document.getElementById('quizTitle').textContent=BOOK_TITLE+' — '+TESTS[idx].title;renderQ();}
+function renderQ(){var test=TESTS[currentTest];var q=test.questions[currentQ];var total=test.questions.length;document.getElementById('qNum').textContent='Question '+(currentQ+1)+' of '+total;document.getElementById('qText').textContent=q.q;document.getElementById('progressFill').style.width=(((currentQ+1)/total)*100)+'%';var fb=document.getElementById('feedback');fb.className='feedback';fb.textContent='';var choicesEl=document.getElementById('choices');choicesEl.innerHTML='';q.ch.forEach(function(choice,i){var letter=['A','B','C','D'][i];var div=document.createElement('div');div.className='choice';if(answered[currentQ])div.classList.add('locked');var userAns=answers[currentQ];if(answered[currentQ]){if(letter===q.a)div.classList.add('correct');else if(letter===userAns&&userAns!==q.a)div.classList.add('wrong');}else if(userAns===letter){div.classList.add('selected');}div.innerHTML='<div class="choice-letter">'+letter+'</div><div class="choice-text">'+choice.substring(3)+'</div>';if(!answered[currentQ]){div.onclick=(function(l){return function(){selectAnswer(l);};})(letter);}choicesEl.appendChild(div);});if(answered[currentQ]){var correct=answers[currentQ]===q.a;fb.className='feedback '+(correct?'correct-fb':'wrong-fb');fb.textContent=correct?'✓ Correct!':'✗ Wrong. The correct answer is '+q.a+'.';}document.getElementById('prevBtn').disabled=currentQ===0;document.getElementById('nextBtn').textContent=currentQ===TESTS[currentTest].questions.length-1?'Finish ✓':'Next →';}
+function selectAnswer(letter){if(answered[currentQ])return;answers[currentQ]=letter;answered[currentQ]=true;renderQ();}
+function nextQ(){if(!answered[currentQ]){alert('Please choose an answer first.');return;}if(currentQ<TESTS[currentTest].questions.length-1){currentQ++;renderQ();}else{showResults();}}
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
+function showResults(){document.getElementById('quiz').style.display='none';document.getElementById('results').style.display='block';var test=TESTS[currentTest];var score=0;answers.forEach(function(a,i){if(a===test.questions[i].a)score++;});var pass=score>=24;document.getElementById('resultEmoji').textContent=pass?'🎯':'📚';document.getElementById('resultScore').textContent=score+'/30';document.getElementById('resultScore').className='result-score '+(pass?'pass':'fail');var badge=document.getElementById('resultBadge');badge.textContent=pass?'✅ PASSED':'❌ NOT PASSED';badge.className='result-badge '+(pass?'pass':'fail');document.getElementById('resultMsg').textContent=pass?'Excellent! You scored '+score+' out of 30. Keep it up!':'You scored '+score+' out of 30. You need 24 to pass. Review your mistakes and try again!';var reviewList=document.getElementById('reviewList');var wrongs=answers.map(function(a,i){return{i:i,a:a,correct:a===test.questions[i].a,q:test.questions[i]};}).filter(function(x){return!x.correct;});if(wrongs.length===0){reviewList.innerHTML='<h3>Review</h3><p style="color:var(--green);font-size:14px;padding:10px 0">🎉 Perfect score! No mistakes.</p>';}else{reviewList.innerHTML='<h3>Mistakes to Review ('+wrongs.length+')</h3>'+wrongs.map(function(w){return'<div class="review-item"><span class="review-icon">❌</span><div class="review-q">Q'+(w.i+1)+': '+w.q.q+'</div><div class="review-ans wrong">You: '+(w.a||'—')+' | Correct: <span class="correct-ans">'+w.q.a+'</span></div></div>';}).join('');}}
+function retryTest(){startTest(currentTest);}
+function backToSelector(){document.getElementById('selector').style.display='block';document.getElementById('quiz').style.display='none';document.getElementById('results').style.display='none';}
 </script>
-
 </body>
 </html>
