@@ -1,504 +1,249 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hit the 60s — Book 7</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    :root {
-      --navy: #1F3864;
-      --blue: #2E75B6;
-      --red: #C00000;
-      --green: #00B050;
-      --gold: #F4A800;
-      --bg: #F0F4FA;
-      --card: #FFFFFF;
-      --text: #1a1a2e;
-      --muted: #6c757d;
-      --border: #dbe2ef;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    header {
-      background: var(--navy);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-badge {
-      background: var(--gold);
-      color: var(--navy);
-      font-weight: 800;
-      font-size: 13px;
-      padding: 4px 10px;
-      border-radius: 6px;
-    }
-    header h1 { color: #fff; font-size: 18px; font-weight: 700; }
-    header span { color: #94A3B8; font-size: 13px; margin-left: auto; }
-    .container { max-width: 680px; margin: 0 auto; padding: 24px 16px 60px; }
-    #selector { text-align: center; padding: 40px 20px; }
-    #selector h2 { font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
-    #selector p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
-    .test-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-width: 400px; margin: 0 auto; }
-    .test-btn {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .test-btn:hover { border-color: var(--blue); background: #EEF4FF; transform: translateY(-2px); }
-    .test-btn .num { font-size: 24px; font-weight: 800; color: var(--navy); }
-    .test-btn .lbl { font-size: 10px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-    #quiz { display: none; }
-    .quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .back-btn { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 14px; font-weight: 600; padding: 6px 0; }
-    .quiz-title { font-size: 18px; font-weight: 800; color: var(--navy); }
-    .quiz-sub { font-size: 12px; color: var(--muted); margin-left: auto; }
-    .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 24px; }
-    .progress-bar { background: var(--blue); height: 100%; width: 0%; transition: width 0.3s ease; }
-    .q-card { background: var(--card); border-radius: 16px; padding: 28px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px; }
-    .q-meta { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
-    .q-text { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 24px; }
-    .options { display: flex; flex-direction: column; gap: 10px; }
-    .opt-btn {
-      background: var(--bg);
-      border: 2px solid transparent;
-      border-radius: 10px;
-      padding: 14px 18px;
-      text-align: left;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text);
-    }
-    .opt-btn:hover:not(:disabled) { border-color: var(--blue); background: #EEF4FF; }
-    .opt-btn.correct { background: #E6F9ED !important; border-color: var(--green) !important; color: #00662E; font-weight: 700; }
-    .opt-btn.wrong { background: #FDE8E8 !important; border-color: var(--red) !important; color: #8B0000; font-weight: 700; }
-    .opt-letter {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .opt-btn.correct .opt-letter { background: var(--green); color: #fff; border-color: var(--green); }
-    .opt-btn.wrong .opt-letter { background: var(--red); color: #fff; border-color: var(--red); }
-    .quiz-nav { display: flex; justify-content: space-between; align-items: center; }
-    .nav-btn {
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 24px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .nav-btn:hover { opacity: 0.9; }
-    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    #results { display: none; text-align: center; }
-    .result-card { background: var(--card); border-radius: 20px; padding: 36px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 24px; }
-    .result-emoji { font-size: 48px; margin-bottom: 12px; }
-    .result-score { font-size: 52px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
-    .result-label { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
-    .result-badge { display: inline-block; padding: 6px 18px; border-radius: 99px; font-size: 14px; font-weight: 800; margin-bottom: 16px; }
-    .result-badge.pass { background: #E6F9ED; color: #00662E; }
-    .result-badge.fail { background: #FDE8E8; color: #8B0000; }
-    .result-msg { font-size: 14px; color: var(--muted); line-height: 1.6; }
-    .review-list { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left; }
-    .review-list h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 14px; text-transform: uppercase; }
-    .review-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .review-item:last-child { border-bottom: none; }
-    .review-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .review-q { font-size: 13px; color: var(--text); flex: 1; }
-    .review-ans { font-size: 12px; font-weight: 600; }
-    .review-ans.wrong { color: var(--red); }
-    .review-ans.correct { color: var(--green); }
-    .result-actions { display: flex; flex-direction: column; gap: 10px; }
-    .action-btn { padding: 15px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; text-align: center; }
-    .action-btn.primary { background: var(--navy); color: #fff; }
-    .action-btn.primary:hover { background: var(--blue); }
-    .action-btn.outline { background: none; border: 2px solid var(--border); color: var(--muted); }
-    .action-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
-    .page-footer { text-align: center; margin-top: 40px; padding: 16px 0; }
-    .footer-text { font-size: 13px; font-weight: 700; color: #800020; line-height: 1.6; white-space: nowrap; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hit the 60s — Book 7</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--navy:#1F3864;--blue:#2E75B6;--red:#C00000;--green:#00B050;--gold:#F4A800;--bg:#F0F4FA;--card:#FFFFFF;--text:#1a1a2e;--muted:#6B7280;--border:#E2E8F0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.logo-badge{background:var(--gold);color:var(--navy);font-weight:800;font-size:13px;padding:4px 10px;border-radius:6px;}
+header h1{color:#fff;font-size:18px;font-weight:700;}
+header span{color:#94A3B8;font-size:13px;margin-left:auto;}
+.container{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+#selector{text-align:center;padding:40px 20px;}
+#selector h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+#selector p{color:var(--muted);font-size:14px;margin-bottom:32px;}
+.test-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:400px;margin:0 auto;}
+.test-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:18px 8px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.test-btn:hover{border-color:var(--blue);background:#EEF4FF;transform:translateY(-2px);}
+.test-btn .num{font-size:24px;font-weight:800;color:var(--navy);}
+.test-btn .lbl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
+#quiz{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--blue);font-size:14px;font-weight:600;padding:6px 0;}
+.quiz-title{font-size:18px;font-weight:800;color:var(--navy);}
+.quiz-sub{font-size:12px;color:var(--muted);margin-left:auto;}
+.progress-wrap{background:var(--border);border-radius:99px;height:6px;margin-bottom:24px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:99px;transition:width 0.4s ease;}
+.q-card{background:var(--card);border-radius:16px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;}
+.q-num{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.q-text{font-size:17px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:24px;}
+.choices{display:flex;flex-direction:column;gap:10px;}
+.choice{display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.18s;background:#FAFBFC;}
+.choice:hover:not(.locked){border-color:var(--blue);background:#EEF4FF;}
+.choice-letter{width:32px;height:32px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0;}
+.choice-text{font-size:15px;color:var(--text);flex:1;}
+.choice.correct{border-color:var(--green);background:#F0FDF4;}
+.choice.correct .choice-letter{background:var(--green);color:#fff;}
+.choice.wrong{border-color:var(--red);background:#FFF0F0;}
+.choice.wrong .choice-letter{background:var(--red);color:#fff;}
+.choice.selected{border-color:var(--blue);background:#EEF4FF;}
+.choice.selected .choice-letter{background:var(--blue);color:#fff;}
+.choice.locked{cursor:default;}
+.feedback{display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;}
+.feedback.correct-fb{background:#F0FDF4;color:var(--green);border:1px solid #BBF7D0;display:block;}
+.feedback.wrong-fb{background:#FFF0F0;color:var(--red);border:1px solid #FECACA;display:block;}
+.nav-row{display:flex;gap:10px;margin-top:6px;}
+.nav-btn{flex:1;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
+.nav-btn.primary{background:var(--navy);color:#fff;}
+.nav-btn.primary:hover{background:var(--blue);}
+.nav-btn.secondary{background:var(--border);color:var(--muted);}
+.nav-btn.secondary:hover{background:#D1D5DB;color:var(--text);}
+.nav-btn:disabled{opacity:0.4;cursor:not-allowed;}
+#results{display:none;}
+.result-card{background:var(--card);border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:20px;}
+.result-emoji{font-size:60px;margin-bottom:16px;display:block;}
+.result-score{font-size:56px;font-weight:800;line-height:1;margin-bottom:4px;}
+.result-score.pass{color:var(--green);}
+.result-score.fail{color:var(--red);}
+.result-label{font-size:14px;color:var(--muted);margin-bottom:16px;}
+.result-badge{display:inline-block;padding:8px 20px;border-radius:99px;font-size:15px;font-weight:700;margin-bottom:20px;}
+.result-badge.pass{background:#F0FDF4;color:var(--green);}
+.result-badge.fail{background:#FFF0F0;color:var(--red);}
+.result-msg{font-size:14px;color:var(--muted);line-height:1.6;}
+.review-list{background:var(--card);border-radius:16px;padding:20px;margin-bottom:20px;}
+.review-list h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
+.review-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.review-item:last-child{border-bottom:none;}
+.review-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.review-q{font-size:13px;color:var(--text);flex:1;}
+.review-ans{font-size:12px;font-weight:600;}
+.review-ans.wrong{color:var(--red);}
+.correct-ans{color:var(--green);}
+.result-actions{display:flex;flex-direction:column;gap:10px;}
+.action-btn{padding:15px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;}
+.action-btn.primary{background:var(--navy);color:#fff;}
+.action-btn.primary:hover{background:var(--blue);}
+.action-btn.outline{background:none;border:2px solid var(--border);color:var(--muted);}
+.action-btn.outline:hover{border-color:var(--blue);color:var(--blue);}
+.page-footer{text-align:center;margin-top:40px;font-size:13px;color:#800020;font-weight:700;}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo-badge">HIT THE 60s</div>
-    <h1>Book 7 — Practice Tests</h1>
-    <span>ALC Prep Course</span>
-  </header>
-  <div class="container">
-    <div id="selector">
-      <h2>Book Seven</h2>
-      <p>Choose a test to begin. Pass score: 24 / 30 (80%)</p>
-      <div class="test-grid">
-        <button class="test-btn" onclick="startTest(0)"><span class="num">1</span><span class="lbl">Test 1</span></button>
-        <button class="test-btn" onclick="startTest(1)"><span class="num">2</span><span class="lbl">Test 2</span></button>
-        <button class="test-btn" onclick="startTest(2)"><span class="num">3</span><span class="lbl">Test 3</span></button>
-        <button class="test-btn" onclick="startTest(3)"><span class="num">4</span><span class="lbl">Test 4</span></button>
-        <button class="test-btn" onclick="startTest(4)"><span class="num">5</span><span class="lbl">Test 5</span></button>
-      </div>
+<header>
+  <div class="logo-badge">HIT THE 60s</div>
+  <h1>Book 7 — Practice Tests</h1>
+  <span>ALC Prep Course</span>
+</header>
+<div class="container">
+  <div id="selector">
+    <h2>Book Seven</h2>
+    <p>Choose a test to begin. Pass score: 24 / 30</p>
+    <div class="test-grid" id="testGrid"></div>
+  </div>
+  <div id="quiz">
+    <div class="quiz-header">
+      <button class="back-btn" id="backBtn">← Back</button>
+      <span class="quiz-title" id="quizTitle"></span>
+      <span class="quiz-sub">Pass: 24/30</span>
     </div>
-    <div id="quiz">
-      <div class="quiz-header">
-        <button class="back-btn" onclick="backToSelector()">← Back to Tests</button>
-        <div class="quiz-title" id="quizTitle">Test 1</div>
-        <div class="quiz-sub" id="quizSub">Q1 of 30</div>
-      </div>
-      <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
-      <div class="q-card">
-        <div class="q-meta" id="qMeta">Question 1</div>
-        <div class="q-text" id="qText">Question text goes here...</div>
-        <div class="options" id="optionsContainer"></div>
-      </div>
-      <div class="quiz-nav">
-        <button class="nav-btn" id="prevBtn" onclick="prevQ()">← Previous</button>
-        <button class="nav-btn" id="nextBtn" onclick="nextQ()">Next →</button>
-      </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-card">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
     </div>
-    <div id="results">
-      <div class="result-card">
-        <div class="result-emoji" id="resultEmoji">🎯</div>
-        <div class="result-score" id="resultScore">0</div>
-        <div class="result-label">out of 30 questions</div>
-        <div class="result-badge" id="resultBadge">PASSED</div>
-        <div class="result-msg" id="resultMsg">Great job!</div>
-      </div>
-      <div class="review-list" id="reviewList"></div>
-      <div class="result-actions">
-        <button class="action-btn primary" onclick="retryTest()">Try Again</button>
-        <button class="action-btn outline" onclick="backToSelector()">Choose Another Test</button>
-      </div>
-    </div>
-    <div class="page-footer">
-      <div class="footer-text">Prepared by Khalid Alameer &nbsp;|&nbsp; Western Naval Aviation Group &nbsp;|</div>
-      <div class="footer-text">"Hit the 60s"</div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" id="prevBtn">← Prev</button>
+      <button class="nav-btn primary" id="nextBtn">Next →</button>
     </div>
   </div>
-  <script>
-    const BOOK_TITLE = "Book 7";
-    const TESTS = [
-      {
-        title: "Test 1",
-        questions: [
-          { q: "You should __ the oil level before taking off.", a: "check", b: "checking", c: "checked", d: "checks", ans: "a" },
-          { q: "The mechanic __ the engine when the lights went out.", a: "was inspecting", b: "inspects", c: "has inspected", d: "will inspect", ans: "a" },
-          { q: "He was unable to attend the briefing __ his illness.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
-          { q: "If the weather clear up, the pilot __ the mission.", a: "will resume", b: "resumed", c: "would resume", d: "resuming", ans: "a" },
-          { q: "The officer __ gave the presentation is from the air wing.", a: "who", b: "which", c: "whom", d: "whose", ans: "a" },
-          { q: "They need to __ all the safety valves before pressurized testing.", a: "inspect", b: "inspection", c: "inspecting", d: "inspected", ans: "a" },
-          { q: "This generator is __ reliable than the old one.", a: "more", b: "most", c: "much", d: "many", ans: "a" },
-          { q: "The recruits haven't completed their physical training __.", a: "yet", b: "already", c: "still", d: "just", ans: "a" },
-          { q: "We have been stationed at this naval base __ three years.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
-          { q: "Make sure to turn __ the main switch before servicing.", a: "off", b: "out", c: "down", d: "away", ans: "a" },
-          { q: "Is there __ water left in the emergency canteen?", a: "any", b: "some", c: "many", d: "few", ans: "a" },
-          { q: "The technician fixed the radar system __.", a: "efficiently", b: "efficient", c: "efficiency", d: "more efficient", ans: "a" },
-          { q: "You must avoid __ unverified radio channels.", a: "using", b: "to use", c: "use", d: "used", ans: "a" },
-          { q: "He was assigned __ the flight deck team.", a: "to", b: "at", c: "in", d: "for", ans: "a" },
-          { q: "The commander requested the crew __ at 0600 hours.", a: "to assemble", b: "assembling", c: "assemble", d: "assembled", ans: "a" },
-          { q: "Neither the pilot __ the co-pilot noticed the error.", a: "nor", b: "or", c: "and", d: "but", ans: "a" },
-          { q: "She explained the flight procedures very __.", a: "clearly", b: "clear", c: "clearness", d: "clearest", ans: "a" },
-          { q: "The unit conducted night drills __ the winter exercise.", a: "during", b: "while", c: "since", d: "for", ans: "a" },
-          { q: "The aircraft arrived __ schedule despite the storm.", a: "on", b: "in", c: "at", d: "by", ans: "a" },
-          { q: "He asked the engineer __ the battery was fully charged.", a: "whether", b: "what", c: "that", d: "which", ans: "a" },
-          { q: "We are looking forward to __ the new simulator.", a: "testing", b: "test", c: "tested", d: "to test", ans: "a" },
-          { q: "Dense fog prevented the jet __ taking off.", a: "from", b: "to", c: "of", d: "with", ans: "a" },
-          { q: "The landing was executed __ despite heavy crosswinds.", a: "safely", b: "safe", c: "safety", d: "safest", ans: "a" },
-          { q: "I would rather __ the maintenance check now.", a: "do", b: "doing", c: "to do", d: "done", ans: "a" },
-          { q: "The soldiers followed all safety __ during live fire.", a: "regulations", b: "regulate", c: "regulating", d: "regulated", ans: "a" },
-          { q: "He was promoted __ his exceptional leadership.", a: "because of", b: "because", c: "due", d: "despite", ans: "a" },
-          { q: "There are __ spare parts in the hangar than before.", a: "fewer", b: "less", c: "little", d: "few", ans: "a" },
-          { q: "The squadron has __ returned from its mission.", a: "just", b: "yet", c: "still", d: "ever", ans: "a" },
-          { q: "All safety protocols must be strictly __.", a: "observed", b: "observing", c: "observe", d: "observes", ans: "a" },
-          { q: "If they __ the warning, the malfunction could have been avoided.", a: "had heeded", b: "heeded", c: "heeds", d: "will heed", ans: "a" }
-        ]
-      },
-      {
-        title: "Test 2",
-        questions: [
-          { q: "The flight instructor told us __ our altitude constantly.", a: "to monitor", b: "monitoring", c: "monitor", d: "monitored", ans: "a" },
-          { q: "Lieutenant Miller is responsible __ communications.", a: "for", b: "about", c: "with", d: "at", ans: "a" },
-          { q: "The generator failed while we __ the radar tests.", a: "were conducting", b: "conduct", c: "conducted", d: "are conducting", ans: "a" },
-          { q: "How __ hydraulic fluid remains in the reservoir?", a: "much", b: "many", c: "few", d: "several", ans: "a" },
-          { q: "The fleet __ for foreign waters early next week.", a: "will depart", b: "departed", c: "depart", d: "departing", ans: "a" },
-          { q: "Personnel __ wear helmets inside the hangar area.", a: "must", b: "might", c: "could", d: "would", ans: "a" },
-          { q: "The radio signal was weak, __ we switched to backup.", a: "so", b: "because", c: "but", d: "although", ans: "a" },
-          { q: "This is the __ critical phase of the mission.", a: "most", b: "more", c: "much", d: "great", ans: "a" },
-          { q: "The flight plan was submitted __ time.", a: "on", b: "in", c: "at", d: "for", ans: "a" },
-          { q: "The maintenance crew hasn't __ the engine yet.", a: "replaced", b: "replace", c: "replacing", d: "replaces", ans: "a" },
-          { q: "He serves __ the head safety inspector.", a: "as", b: "like", c: "same", d: "so", ans: "a" },
-          { q: "If pressure drops, the warning system __.", a: "will activate", b: "activated", c: "is activating", d: "was active", ans: "a" },
-          { q: "He handles stress __ than most officers.", a: "better", b: "good", c: "well", d: "best", ans: "a" },
-          { q: "The aircraft was refueled __ the brief layover.", a: "during", b: "while", c: "for", d: "since", ans: "a" },
-          { q: "You ought __ double-check the cargo straps.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
-          { q: "There were __ trainees present at the morning formation.", a: "many", b: "much", c: "little", d: "any", ans: "a" },
-          { q: "The briefing will begin promptly __ 0900.", a: "at", b: "in", c: "on", d: "by", ans: "a" },
-          { q: "He apologized __ arriving late to the debriefing.", a: "for", b: "about", c: "at", d: "on", ans: "a" },
-          { q: "The damaged wing was repaired __ certified technicians.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
-          { q: "Are you familiar __ this navigational software?", a: "with", b: "about", c: "for", d: "to", ans: "a" },
-          { q: "He decided __ his enlistment for four more years.", a: "to extend", b: "extending", c: "extend", d: "extended", ans: "a" },
-          { q: "The general was impressed __ the squad's readiness.", a: "by", b: "for", c: "with", d: "on", ans: "a" },
-          { q: "She hasn't visited the naval hospital __ last year.", a: "since", b: "for", c: "during", d: "from", ans: "a" },
-          { q: "The blip appeared clearly __ the radar screen.", a: "on", b: "in", c: "at", d: "to", ans: "a" },
-          { q: "You had better __ your life vest immediately.", a: "don", b: "to don", c: "donning", d: "donned", ans: "a" },
-          { q: "The mission failed because the team __ follow orders.", a: "didn't", b: "doesn't", c: "wasn't", d: "haven't", ans: "a" },
-          { q: "This specialized wrench is used __ securing bolts.", a: "for", b: "to", c: "with", d: "by", ans: "a" },
-          { q: "They reached the target __ severe radio interference.", a: "despite", b: "although", c: "because of", d: "even though", ans: "a" },
-          { q: "The pilot was commended __ his quick decision-making.", a: "for", b: "about", c: "at", d: "on", ans: "a" },
-          { q: "By next month, the squad __ its advanced qualification.", a: "will have completed", b: "completed", c: "will complete", d: "complete", ans: "a" }
-        ]
-      },
-      {
-        title: "Test 3",
-        questions: [
-          { q: "The cadets __ instructed on parachute operation.", a: "were", b: "was", c: "are", d: "have been", ans: "a" },
-          { q: "He avoids __ low over populated areas.", a: "flying", b: "to fly", c: "fly", d: "flew", ans: "a" },
-          { q: "The mechanic received recognition __ his invention.", a: "for", b: "about", c: "with", d: "on", ans: "a" },
-          { q: "If we depart now, we __ reach the carrier before dark.", a: "will", b: "would", c: "did", d: "had", ans: "a" },
-          { q: "The operational schematics were verified __ the chief engineer.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
-          { q: "She is interested __ mastering night-vision systems.", a: "in", b: "on", c: "at", d: "about", ans: "a" },
-          { q: "There are __ aircraft currently parked on the tarmac.", a: "several", b: "much", c: "little", d: "any", ans: "a" },
-          { q: "Always disconnect power __ servicing the radar unit.", a: "before", b: "while", c: "until", d: "since", ans: "a" },
-          { q: "The admiral expressed his __ with the fleet maneuver.", a: "satisfaction", b: "satisfy", c: "satisfied", d: "satisfying", ans: "a" },
-          { q: "This turbine operates __ quieter than the previous model.", a: "much", b: "more", c: "very", d: "too", ans: "a" },
-          { q: "The transport helicopter landed __ the deck smoothly.", a: "on", b: "in", c: "to", d: "at", ans: "a" },
-          { q: "The petty officer promised __ the inventory list.", a: "to update", b: "updating", c: "update", d: "updated", ans: "a" },
-          { q: "Neither weather __ equipment failure stopped the test.", a: "nor", b: "or", c: "and", d: "but", ans: "a" },
-          { q: "Personnel were cautioned __ entering the launch pad.", a: "against", b: "from", c: "about", d: "for", ans: "a" },
-          { q: "The jet climbed steadily __ severe atmospheric turbulence.", a: "despite", b: "although", c: "because of", d: "since", ans: "a" },
-          { q: "The helmsman steered the ship __ through the narrow strait.", a: "carefully", b: "careful", c: "carelessness", d: "careless", ans: "a" },
-          { q: "The watch officer has been on duty __ midnight.", a: "since", b: "for", c: "during", d: "from", ans: "a" },
-          { q: "The tactical briefing is held __ the command room.", a: "in", b: "on", c: "at", d: "to", ans: "a" },
-          { q: "He was assigned to maintenance because of his technical __.", a: "skill", b: "skilful", c: "skilfully", d: "skilled", ans: "a" },
-          { q: "Keep the emergency radio __ easy reach.", a: "within", b: "inside", c: "on", d: "at", ans: "a" },
-          { q: "If I __ in command, I would order immediate evacuation.", a: "were", b: "was", c: "am", d: "been", ans: "a" },
-          { q: "The captain suggested __ a full system reboot.", a: "trying", b: "to try", c: "try", d: "tried", ans: "a" },
-          { q: "The forecaster expects __ clear skies across the region.", a: "no article", b: "a", c: "an", d: "the", ans: "a" },
-          { q: "The aircraft accelerated __ fast that it reached Mach 1 quickly.", a: "so", b: "too", c: "very", d: "such", ans: "a" },
-          { q: "The report must be authorized __ the commanding officer.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
-          { q: "She is fully capable __ performing under extreme pressure.", a: "of", b: "in", c: "at", d: "for", ans: "a" },
-          { q: "The squadron has been deployed __ six consecutive months.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
-          { q: "The flight surgeon advised him __ rest for forty-eight hours.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
-          { q: "The pilot landed without __ any distress signals.", a: "sending", b: "send", c: "sent", d: "to send", ans: "a" },
-          { q: "This new radar is __ more accurate than former systems.", a: "far", b: "more", c: "most", d: "very", ans: "a" }
-        ]
-      },
-      {
-        title: "Test 4",
-        questions: [
-          { q: "The squad congratulated Sergeant Davis __ his promotion.", a: "on", b: "for", c: "about", d: "at", ans: "a" },
-          { q: "Who was held responsible __ the communications failure?", a: "for", b: "about", c: "with", d: "to", ans: "a" },
-          { q: "The flight controls were inspected __ before departure.", a: "thoroughly", b: "thorough", c: "thoroughness", d: "more thorough", ans: "a" },
-          { q: "If the fuel pressure __, land the aircraft immediately.", a: "drops", b: "dropped", c: "will drop", d: "dropping", ans: "a" },
-          { q: "The chief officer insists __ maintaining clean workspaces.", a: "on", b: "in", c: "at", d: "for", ans: "a" },
-          { q: "The flight manual was clear enough for trainees __.", a: "to follow", b: "following", c: "follow", d: "followed", ans: "a" },
-          { q: "Naval aviators are accustomed __ high-stress situations.", a: "to", b: "with", c: "at", d: "for", ans: "a" },
-          { q: "The exercise was delayed due __ hydraulic leaks.", a: "to", b: "for", c: "with", d: "at", ans: "a" },
-          { q: "The static was so loud that we could __ hear the tower.", a: "barely", b: "clearly", c: "easily", d: "hard", ans: "a" },
-          { q: "The captain prefers naval transport __ air transport.", a: "to", b: "than", c: "over", d: "from", ans: "a" },
-          { q: "The maintenance crew finished work __ schedule.", a: "ahead of", b: "before of", c: "in front of", d: "earlier to", ans: "a" },
-          { q: "He was disciplined for __ disobeying standard safety rules.", a: "intentionally", b: "intentional", c: "intention", d: "intend", ans: "a" },
-          { q: "They navigated through the storm __ major incidents.", a: "without", b: "with no", c: "less", d: "lacking", ans: "a" },
-          { q: "The chief urged everyone __ calm during emergency drills.", a: "to remain", b: "remaining", c: "remain", d: "remained", ans: "a" },
-          { q: "The technician has been absent __ duty since Tuesday.", a: "from", b: "at", c: "in", d: "to", ans: "a" },
-          { q: "He missed the warning light, __ he continued the engine test.", a: "so", b: "because", c: "but", d: "although", ans: "a" },
-          { q: "The engine cut out because it ran __ fuel completely.", a: "out of", b: "away from", c: "off with", d: "down from", ans: "a" },
-          { q: "The entire crew was surprised __ the sudden deployment order.", a: "by", b: "for", c: "with", d: "on", ans: "a" },
-          { q: "This air base is famous __ its high operational readiness.", a: "for", b: "about", c: "with", d: "in", ans: "a" },
-          { q: "The flight plan was reviewed __ the safety officer.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
-          { q: "She left the flight deck without __ her helmet.", a: "wearing", b: "wear", c: "wore", d: "to wear", ans: "a" },
-          { q: "Visibility was poor; __, the pilot made a safe landing.", a: "nevertheless", b: "therefore", c: "because", d: "so", ans: "a" },
-          { q: "Proper maintenance prevents engines __ overheating.", a: "from", b: "to", c: "of", d: "with", ans: "a" },
-          { q: "The technician had no difficulty __ identifying the fault.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
-          { q: "The manual provides a detailed __ of the aircraft systems.", a: "description", b: "describe", c: "descriptive", d: "describingly", ans: "a" },
-          { q: "The drill was postponed __ severe thunderstorms.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
-          { q: "The pilot was eager __ start the training mission.", a: "to", b: "for", c: "at", d: "on", ans: "a" },
-          { q: "The landing gear was repaired __ ground support engineers.", a: "by", b: "with", c: "from", d: "of", ans: "a" },
-          { q: "The commander was satisfied __ the tactical exercise result.", a: "with", b: "at", c: "for", d: "on", ans: "a" },
-          { q: "We had to abort takeoff __ oil pressure anomalies.", a: "due to", b: "because", c: "since", d: "as", ans: "a" }
-        ]
-      },
-      {
-        title: "Test 5",
-        questions: [
-          { q: "The air traffic controller ordered the pilot to __ altitude.", a: "maintain", b: "maintaining", c: "maintained", d: "maintenance", ans: "a" },
-          { q: "The operator was accused __ leaving his radio unmonitored.", a: "of", b: "for", c: "with", d: "about", ans: "a" },
-          { q: "The squad performed much better than the captain __.", a: "had expected", b: "expecting", c: "expect", d: "expects", ans: "a" },
-          { q: "He talks about jet propulsion as if he __ an aeronautical engineer.", a: "were", b: "is", c: "are", d: "been", ans: "a" },
-          { q: "The board has published __ final evaluation report.", a: "its", b: "it's", c: "their", d: "they're", ans: "a" },
-          { q: "The pilot succeeded __ executing a difficult night landing.", a: "in", b: "at", c: "on", d: "for", ans: "a" },
-          { q: "The recruits were astonished __ the speed of the jet.", a: "at", b: "with", c: "for", d: "in", ans: "a" },
-          { q: "All shore leave is suspended __ further notice.", a: "until", b: "since", c: "for", d: "at", ans: "a" },
-          { q: "He refused __ the aircraft without proper pre-flight clearance.", a: "to board", b: "boarding", c: "board", d: "boarded", ans: "a" },
-          { q: "She has been serving as flight instructor __ five years.", a: "for", b: "since", c: "during", d: "from", ans: "a" },
-          { q: "The new flight procedure was approved __ the admiral.", a: "by", b: "with", c: "from", d: "at", ans: "a" },
-          { q: "The pilot spoke with total __ during the radio transmission.", a: "confidence", b: "confident", c: "confidently", d: "confide", ans: "a" },
-          { q: "He avoided __ any major mistakes during the evaluation.", a: "making", b: "to make", c: "make", d: "made", ans: "a" },
-          { q: "The search mission succeeded __ terrible weather conditions.", a: "despite", b: "although", c: "even though", d: "because", ans: "a" },
-          { q: "The flight crew was warned __ violating altitude limits.", a: "against", b: "from", c: "about", d: "for", ans: "a" },
-          { q: "She operates the flight simulator exceptionally __.", a: "well", b: "good", c: "best", d: "better", ans: "a" },
-          { q: "They delayed the flight __ low visibility at the airbase.", a: "because of", b: "because", c: "since", d: "as", ans: "a" },
-          { q: "The maintenance chief was pleased __ the crew's effort.", a: "with", b: "at", c: "for", d: "on", ans: "a" },
-          { q: "Hazardous materials must be stored __ secure containers.", a: "in", b: "on", c: "at", d: "to", ans: "a" },
-          { q: "The officer is not only skilled __ also highly experienced.", a: "but", b: "and", c: "or", d: "so", ans: "a" },
-          { q: "He entered the restricted zone without __ identified.", a: "being", b: "be", c: "been", d: "to be", ans: "a" },
-          { q: "Sirens were activated __ all base personnel of the weather emergency.", a: "to warn", b: "warning", c: "warn", d: "warned", ans: "a" },
-          { q: "Keep all maintenance tools organized and __.", a: "clean", b: "cleaning", c: "cleans", d: "cleanly", ans: "a" },
-          { q: "This squadron has been assigned to the region __ 2021.", a: "since", b: "for", c: "from", d: "during", ans: "a" },
-          { q: "The recruit left the hangar without __ for permission.", a: "asking", b: "ask", c: "asked", d: "to ask", ans: "a" },
-          { q: "The helicopter was inspected __ every flight.", a: "before", b: "while", c: "during", d: "until", ans: "a" },
-          { q: "The squad showed exemplary discipline __ the exercise.", a: "during", b: "while", c: "for", d: "since", ans: "a" },
-          { q: "He is certified __ fly multi-engine aircraft.", a: "to", b: "for", c: "at", d: "in", ans: "a" },
-          { q: "They completed the tactical scenario __ no errors.", a: "with", b: "by", c: "from", d: "for", ans: "a" },
-          { q: "The operation was evaluated as successful __ all metrics.", a: "by", b: "with", c: "at", d: "on", ans: "a" }
-        ]
-      }
-    ];
+  <div id="results">
+    <div class="result-card">
+      <span class="result-emoji" id="resultEmoji"></span>
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-label">out of 30 questions</div>
+      <div class="result-badge" id="resultBadge"></div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+    <div class="result-actions">
+      <button class="action-btn primary" id="retryBtn">🔄 Try Again</button>
+      <button class="action-btn outline" id="backBtn2">← Choose Another Test</button>
+    </div>
+  </div>
+  <div class="page-footer">
+    <div>Prepared by Khalid Alameer &nbsp;|&nbsp; Western Naval Aviation Group &nbsp;|</div>
+    <div style="text-align:center;font-size:14px;font-weight:700;margin-top:6px;">"Hit the 60s"</div>
+  </div>
+</div>
+<script>
+var BOOK_TITLE="Book 7";
+var TESTS=[{"title":"Test 1","questions":[{"q":"A ______ has three sides.","ch":["A) square","B) rectangle","C) circle","D) triangle"],"a":"D"},{"q":"A ______ has four equal sides.","ch":["A) triangle","B) rectangle","C) square","D) circle"],"a":"C"},{"q":"Draw a dot in the ______ of the circle.","ch":["A) top","B) bottom","C) edge","D) center"],"a":"D"},{"q":"He ______ a circle on the board.","ch":["A) draw","B) draws","C) drew","D) drawing"],"a":"C"},{"q":"The two shapes look ______.","ch":["A) different","B) opposite","C) alike","D) narrow"],"a":"C"},{"q":"He visited France and England. He liked ______ countries.","ch":["A) other","B) some","C) any","D) both"],"a":"D"},{"q":"My country is ______ than yours.","ch":["A) hot","B) more hot","C) hotter","D) hottest"],"a":"C"},{"q":"This rectangle is ______ than that one.","ch":["A) wide","B) more wide","C) widest","D) wider"],"a":"D"},{"q":"Do you have ______ coffee?","ch":["A) any","B) some","C) both","D) other"],"a":"A"},{"q":"No, I don't have ______ sugar.","ch":["A) some","B) both","C) any","D) other"],"a":"C"},{"q":"Do you want juice or coffee?  —  I'd like ______, please.","ch":["A) other","B) any","C) some","D) both"],"a":"D"},{"q":"One pen is mine; ______ is my brother's.","ch":["A) both","B) the other","C) any","D) some"],"a":"B"},{"q":"How ______ is the house?","ch":["A) long","B) much","C) old","D) many"],"a":"C"},{"q":"How old ______ Ahmed?","ch":["A) are","B) was","C) is","D) were"],"a":"C"},{"q":"Ahmed is ______ student in the class.","ch":["A) tall","B) taller","C) the tall","D) the tallest"],"a":"D"},{"q":"What do we use a stove ______?","ch":["A) to","B) for","C) at","D) in"],"a":"B"},{"q":"We use a stove ______ cook food.","ch":["A) for","B) at","C) to","D) in"],"a":"C"},{"q":"A circle has a ______ edge.","ch":["A) straight","B) narrow","C) curved","D) wide"],"a":"C"},{"q":"He is a ______ and strong soldier.","ch":["A) tall","B) tallest","C) taller","D) more tall"],"a":"A"},{"q":"This is the ______ problem on the test.","ch":["A) hard","B) harder","C) hardest","D) most hard"],"a":"C"},{"q":"English is ______ than math for me.","ch":["A) easy","B) easier","C) easiest","D) more easy"],"a":"B"},{"q":"5 + 3 = 8.  Five ______ three equals eight.","ch":["A) minus","B) times","C) plus","D) divided by"],"a":"C"},{"q":"The past of 'run' is ______.","ch":["A) runned","B) ran","C) run","D) runs"],"a":"B"},{"q":"10 ÷ 2 = 5.  Ten ______ two equals five.","ch":["A) plus","B) minus","C) times","D) divided by"],"a":"D"},{"q":"A rectangle is ______ and narrow.","ch":["A) fast","B) long","C) wide","D) curved"],"a":"B"},{"q":"He ______ a mistake on the test.","ch":["A) did","B) made","C) got","D) took"],"a":"B"},{"q":"Who has the ______ box?","ch":["A) small","B) smaller","C) smallest","D) most small"],"a":"C"},{"q":"I use this ______ cleaning the floor.","ch":["A) to","B) at","C) in","D) for"],"a":"D"},{"q":"He bought two books. He didn't read ______ book.","ch":["A) both","B) some","C) the other","D) any"],"a":"C"},{"q":"How old is the building?  —  It ______ built in 1980.","ch":["A) is","B) was","C) were","D) be"],"a":"B"}]},{"title":"Test 2","questions":[{"q":"A ______ has three sides.","ch":["A) square","B) rectangle","C) circle","D) triangle"],"a":"C"},{"q":"A ______ has four equal sides.","ch":["A) triangle","B) rectangle","C) square","D) circle"],"a":"C"},{"q":"Draw a dot in the ______ of the circle.","ch":["A) top","B) bottom","C) edge","D) center"],"a":"D"},{"q":"He ______ a circle on the board.","ch":["A) draw","B) draws","C) drew","D) drawing"],"a":"C"},{"q":"The two shapes look ______.","ch":["A) different","B) opposite","C) alike","D) narrow"],"a":"C"},{"q":"He visited France and England. He liked ______ countries.","ch":["A) other","B) some","C) any","D) both"],"a":"C"},{"q":"My country is ______ than yours.","ch":["A) hot","B) more hot","C) hotter","D) hottest"],"a":"D"},{"q":"This rectangle is ______ than that one.","ch":["A) wide","B) more wide","C) widest","D) wider"],"a":"C"},{"q":"Do you have ______ coffee?","ch":["A) any","B) some","C) both","D) other"],"a":"C"},{"q":"No, I don't have ______ sugar.","ch":["A) some","B) both","C) any","D) other"],"a":"C"},{"q":"Do you want juice or coffee?  —  I'd like ______, please.","ch":["A) other","B) any","C) some","D) both"],"a":"D"},{"q":"One pen is mine; ______ is my brother's.","ch":["A) both","B) the other","C) any","D) some"],"a":"B"},{"q":"How ______ is the house?","ch":["A) long","B) much","C) old","D) many"],"a":"C"},{"q":"How old ______ Ahmed?","ch":["A) are","B) was","C) is","D) were"],"a":"D"},{"q":"Ahmed is ______ student in the class.","ch":["A) tall","B) taller","C) the tall","D) the tallest"],"a":"B"},{"q":"What do we use a stove ______?","ch":["A) to","B) for","C) at","D) in"],"a":"C"},{"q":"We use a stove ______ cook food.","ch":["A) for","B) at","C) to","D) in"],"a":"C"},{"q":"A circle has a ______ edge.","ch":["A) straight","B) narrow","C) curved","D) wide"],"a":"B"},{"q":"He is a ______ and strong soldier.","ch":["A) tall","B) tallest","C) taller","D) more tall"],"a":"C"},{"q":"This is the ______ problem on the test.","ch":["A) hard","B) harder","C) hardest","D) most hard"],"a":"C"},{"q":"English is ______ than math for me.","ch":["A) easy","B) easier","C) easiest","D) more easy"],"a":"C"},{"q":"5 + 3 = 8.  Five ______ three equals eight.","ch":["A) minus","B) times","C) plus","D) divided by"],"a":"D"},{"q":"The past of 'run' is ______.","ch":["A) runned","B) ran","C) run","D) runs"],"a":"B"},{"q":"10 ÷ 2 = 5.  Ten ______ two equals five.","ch":["A) plus","B) minus","C) times","D) divided by"],"a":"C"},{"q":"A rectangle is ______ and narrow.","ch":["A) fast","B) long","C) wide","D) curved"],"a":"B"},{"q":"He ______ a mistake on the test.","ch":["A) did","B) made","C) got","D) took"],"a":"C"},{"q":"Who has the ______ box?","ch":["A) small","B) smaller","C) smallest","D) most small"],"a":"B"},{"q":"I use this ______ cleaning the floor.","ch":["A) to","B) at","C) in","D) for"],"a":"D"},{"q":"He bought two books. He didn't read ______ book.","ch":["A) both","B) some","C) the other","D) any"],"a":"C"},{"q":"How old is the building?  —  It ______ built in 1980.","ch":["A) is","B) was","C) were","D) be"],"a":"B"}]},{"title":"Test 3","questions":[{"q":"A ______ has three sides.","ch":["A) square","B) rectangle","C) circle","D) triangle"],"a":"B"},{"q":"A ______ has four equal sides.","ch":["A) triangle","B) rectangle","C) square","D) circle"],"a":"C"},{"q":"Draw a dot in the ______ of the circle.","ch":["A) top","B) bottom","C) edge","D) center"],"a":"D"},{"q":"He ______ a circle on the board.","ch":["A) draw","B) draws","C) drew","D) drawing"],"a":"D"},{"q":"The two shapes look ______.","ch":["A) different","B) opposite","C) alike","D) narrow"],"a":"B"},{"q":"He visited France and England. He liked ______ countries.","ch":["A) other","B) some","C) any","D) both"],"a":"A"},{"q":"My country is ______ than yours.","ch":["A) hot","B) more hot","C) hotter","D) hottest"],"a":"A"},{"q":"This rectangle is ______ than that one.","ch":["A) wide","B) more wide","C) widest","D) wider"],"a":"D"},{"q":"Do you have ______ coffee?","ch":["A) any","B) some","C) both","D) other"],"a":"B"},{"q":"No, I don't have ______ sugar.","ch":["A) some","B) both","C) any","D) other"],"a":"D"},{"q":"Do you want juice or coffee?  —  I'd like ______, please.","ch":["A) other","B) any","C) some","D) both"],"a":"C"},{"q":"One pen is mine; ______ is my brother's.","ch":["A) both","B) the other","C) any","D) some"],"a":"B"},{"q":"How ______ is the house?","ch":["A) long","B) much","C) old","D) many"],"a":"D"},{"q":"How old ______ Ahmed?","ch":["A) are","B) was","C) is","D) were"],"a":"B"},{"q":"Ahmed is ______ student in the class.","ch":["A) tall","B) taller","C) the tall","D) the tallest"],"a":"C"},{"q":"What do we use a stove ______?","ch":["A) to","B) for","C) at","D) in"],"a":"C"},{"q":"We use a stove ______ cook food.","ch":["A) for","B) at","C) to","D) in"],"a":"B"},{"q":"A circle has a ______ edge.","ch":["A) straight","B) narrow","C) curved","D) wide"],"a":"C"},{"q":"He is a ______ and strong soldier.","ch":["A) tall","B) tallest","C) taller","D) more tall"],"a":"D"},{"q":"This is the ______ problem on the test.","ch":["A) hard","B) harder","C) hardest","D) most hard"],"a":"C"},{"q":"English is ______ than math for me.","ch":["A) easy","B) easier","C) easiest","D) more easy"],"a":"C"},{"q":"5 + 3 = 8.  Five ______ three equals eight.","ch":["A) minus","B) times","C) plus","D) divided by"],"a":"B"},{"q":"The past of 'run' is ______.","ch":["A) runned","B) ran","C) run","D) runs"],"a":"C"},{"q":"10 ÷ 2 = 5.  Ten ______ two equals five.","ch":["A) plus","B) minus","C) times","D) divided by"],"a":"A"},{"q":"A rectangle is ______ and narrow.","ch":["A) fast","B) long","C) wide","D) curved"],"a":"A"},{"q":"He ______ a mistake on the test.","ch":["A) did","B) made","C) got","D) took"],"a":"C"},{"q":"Who has the ______ box?","ch":["A) small","B) smaller","C) smallest","D) most small"],"a":"C"},{"q":"I use this ______ cleaning the floor.","ch":["A) to","B) at","C) in","D) for"],"a":"B"},{"q":"He bought two books. He didn't read ______ book.","ch":["A) both","B) some","C) the other","D) any"],"a":"B"},{"q":"How old is the building?  —  It ______ built in 1980.","ch":["A) is","B) was","C) were","D) be"],"a":"C"}]},{"title":"Test 4","questions":[{"q":"A ______ has three sides.","ch":["A) square","B) rectangle","C) circle","D) triangle"],"a":"D"},{"q":"A ______ has four equal sides.","ch":["A) triangle","B) rectangle","C) square","D) circle"],"a":"C"},{"q":"Draw a dot in the ______ of the circle.","ch":["A) top","B) bottom","C) edge","D) center"],"a":"A"},{"q":"He ______ a circle on the board.","ch":["A) draw","B) draws","C) drew","D) drawing"],"a":"A"},{"q":"The two shapes look ______.","ch":["A) different","B) opposite","C) alike","D) narrow"],"a":"D"},{"q":"He visited France and England. He liked ______ countries.","ch":["A) other","B) some","C) any","D) both"],"a":"C"},{"q":"My country is ______ than yours.","ch":["A) hot","B) more hot","C) hotter","D) hottest"],"a":"B"},{"q":"This rectangle is ______ than that one.","ch":["A) wide","B) more wide","C) widest","D) wider"],"a":"C"},{"q":"Do you have ______ coffee?","ch":["A) any","B) some","C) both","D) other"],"a":"D"},{"q":"No, I don't have ______ sugar.","ch":["A) some","B) both","C) any","D) other"],"a":"D"},{"q":"Do you want juice or coffee?  —  I'd like ______, please.","ch":["A) other","B) any","C) some","D) both"],"a":"B"},{"q":"One pen is mine; ______ is my brother's.","ch":["A) both","B) the other","C) any","D) some"],"a":"C"},{"q":"How ______ is the house?","ch":["A) long","B) much","C) old","D) many"],"a":"A"},{"q":"How old ______ Ahmed?","ch":["A) are","B) was","C) is","D) were"],"a":"D"},{"q":"Ahmed is ______ student in the class.","ch":["A) tall","B) taller","C) the tall","D) the tallest"],"a":"C"},{"q":"What do we use a stove ______?","ch":["A) to","B) for","C) at","D) in"],"a":"C"},{"q":"We use a stove ______ cook food.","ch":["A) for","B) at","C) to","D) in"],"a":"C"},{"q":"A circle has a ______ edge.","ch":["A) straight","B) narrow","C) curved","D) wide"],"a":"B"},{"q":"He is a ______ and strong soldier.","ch":["A) tall","B) tallest","C) taller","D) more tall"],"a":"D"},{"q":"This is the ______ problem on the test.","ch":["A) hard","B) harder","C) hardest","D) most hard"],"a":"C"},{"q":"English is ______ than math for me.","ch":["A) easy","B) easier","C) easiest","D) more easy"],"a":"B"},{"q":"5 + 3 = 8.  Five ______ three equals eight.","ch":["A) minus","B) times","C) plus","D) divided by"],"a":"D"},{"q":"The past of 'run' is ______.","ch":["A) runned","B) ran","C) run","D) runs"],"a":"C"},{"q":"10 ÷ 2 = 5.  Ten ______ two equals five.","ch":["A) plus","B) minus","C) times","D) divided by"],"a":"D"},{"q":"A rectangle is ______ and narrow.","ch":["A) fast","B) long","C) wide","D) curved"],"a":"B"},{"q":"He ______ a mistake on the test.","ch":["A) did","B) made","C) got","D) took"],"a":"B"},{"q":"Who has the ______ box?","ch":["A) small","B) smaller","C) smallest","D) most small"],"a":"C"},{"q":"I use this ______ cleaning the floor.","ch":["A) to","B) at","C) in","D) for"],"a":"C"},{"q":"He bought two books. He didn't read ______ book.","ch":["A) both","B) some","C) the other","D) any"],"a":"B"},{"q":"How old is the building?  —  It ______ built in 1980.","ch":["A) is","B) was","C) were","D) be"],"a":"C"}]},{"title":"Test 5","questions":[{"q":"A ______ has three sides.","ch":["A) square","B) rectangle","C) circle","D) triangle"],"a":"D"},{"q":"A ______ has four equal sides.","ch":["A) triangle","B) rectangle","C) square","D) circle"],"a":"A"},{"q":"Draw a dot in the ______ of the circle.","ch":["A) top","B) bottom","C) edge","D) center"],"a":"D"},{"q":"He ______ a circle on the board.","ch":["A) draw","B) draws","C) drew","D) drawing"],"a":"C"},{"q":"The two shapes look ______.","ch":["A) different","B) opposite","C) alike","D) narrow"],"a":"C"},{"q":"He visited France and England. He liked ______ countries.","ch":["A) other","B) some","C) any","D) both"],"a":"C"},{"q":"My country is ______ than yours.","ch":["A) hot","B) more hot","C) hotter","D) hottest"],"a":"B"},{"q":"This rectangle is ______ than that one.","ch":["A) wide","B) more wide","C) widest","D) wider"],"a":"C"},{"q":"Do you have ______ coffee?","ch":["A) any","B) some","C) both","D) other"],"a":"D"},{"q":"No, I don't have ______ sugar.","ch":["A) some","B) both","C) any","D) other"],"a":"B"},{"q":"Do you want juice or coffee?  —  I'd like ______, please.","ch":["A) other","B) any","C) some","D) both"],"a":"C"},{"q":"One pen is mine; ______ is my brother's.","ch":["A) both","B) the other","C) any","D) some"],"a":"C"},{"q":"How ______ is the house?","ch":["A) long","B) much","C) old","D) many"],"a":"D"},{"q":"How old ______ Ahmed?","ch":["A) are","B) was","C) is","D) were"],"a":"C"},{"q":"Ahmed is ______ student in the class.","ch":["A) tall","B) taller","C) the tall","D) the tallest"],"a":"D"},{"q":"What do we use a stove ______?","ch":["A) to","B) for","C) at","D) in"],"a":"C"},{"q":"We use a stove ______ cook food.","ch":["A) for","B) at","C) to","D) in"],"a":"C"},{"q":"A circle has a ______ edge.","ch":["A) straight","B) narrow","C) curved","D) wide"],"a":"C"},{"q":"He is a ______ and strong soldier.","ch":["A) tall","B) tallest","C) taller","D) more tall"],"a":"D"},{"q":"This is the ______ problem on the test.","ch":["A) hard","B) harder","C) hardest","D) most hard"],"a":"C"},{"q":"English is ______ than math for me.","ch":["A) easy","B) easier","C) easiest","D) more easy"],"a":"C"},{"q":"5 + 3 = 8.  Five ______ three equals eight.","ch":["A) minus","B) times","C) plus","D) divided by"],"a":"D"},{"q":"The past of 'run' is ______.","ch":["A) runned","B) ran","C) run","D) runs"],"a":"C"},{"q":"10 ÷ 2 = 5.  Ten ______ two equals five.","ch":["A) plus","B) minus","C) times","D) divided by"],"a":"C"},{"q":"A rectangle is ______ and narrow.","ch":["A) fast","B) long","C) wide","D) curved"],"a":"C"},{"q":"He ______ a mistake on the test.","ch":["A) did","B) made","C) got","D) took"],"a":"C"},{"q":"Who has the ______ box?","ch":["A) small","B) smaller","C) smallest","D) most small"],"a":"B"},{"q":"I use this ______ cleaning the floor.","ch":["A) to","B) at","C) in","D) for"],"a":"C"},{"q":"He bought two books. He didn't read ______ book.","ch":["A) both","B) some","C) the other","D) any"],"a":"B"},{"q":"How old is the building?  —  It ______ built in 1980.","ch":["A) is","B) was","C) were","D) be"],"a":"C"}]}];
+var currentTest=0,currentQ=0,answers=[],answered=[];
 
-    let currentTest = 0, currentQ = 0, answers = [], answered = [];
+// Build test grid buttons
+var grid=document.getElementById('testGrid');
+for(var i=0;i<TESTS.length;i++){
+  var btn=document.createElement('div');
+  btn.className='test-btn';
+  btn.innerHTML='<span class="num">'+(i+1)+'</span><span class="lbl">Test</span>';
+  (function(idx){btn.addEventListener('click',function(){startTest(idx);});})(i);
+  grid.appendChild(btn);
+}
 
-    function startTest(idx) {
-      currentTest = idx;
-      currentQ = 0;
-      const qCount = TESTS[idx].questions.length;
-      answers = new Array(qCount).fill(null);
-      answered = new Array(qCount).fill(false);
-      document.getElementById('selector').style.display = 'none';
-      document.getElementById('results').style.display = 'none';
-      document.getElementById('quiz').style.display = 'block';
-      document.getElementById('quizTitle').textContent = ⁠ Book 7 — ${TESTS[idx].title} ⁠;
-      renderQ();
+// Button event listeners
+document.getElementById('backBtn').addEventListener('click',backToSelector);
+document.getElementById('backBtn2').addEventListener('click',backToSelector);
+document.getElementById('prevBtn').addEventListener('click',prevQ);
+document.getElementById('nextBtn').addEventListener('click',nextQ);
+document.getElementById('retryBtn').addEventListener('click',function(){startTest(currentTest);});
+
+function startTest(idx){
+  currentTest=idx;currentQ=0;
+  answers=new Array(30).fill(null);
+  answered=new Array(30).fill(false);
+  document.getElementById('selector').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('results').style.display='none';
+  document.getElementById('quizTitle').textContent=BOOK_TITLE+' — '+TESTS[idx].title;
+  renderQ();
+}
+
+function renderQ(){
+  var test=TESTS[currentTest];
+  var q=test.questions[currentQ];
+  var total=test.questions.length;
+  document.getElementById('qNum').textContent='Question '+(currentQ+1)+' of '+total;
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('progressFill').style.width=(((currentQ+1)/total)*100)+'%';
+  var fb=document.getElementById('feedback');
+  fb.className='feedback';fb.textContent='';
+  var choicesEl=document.getElementById('choices');
+  choicesEl.innerHTML='';
+  q.ch.forEach(function(choice,i){
+    var letter=['A','B','C','D'][i];
+    var div=document.createElement('div');
+    div.className='choice';
+    if(answered[currentQ])div.classList.add('locked');
+    var userAns=answers[currentQ];
+    if(answered[currentQ]){
+      if(letter===q.a)div.classList.add('correct');
+      else if(letter===userAns&&userAns!==q.a)div.classList.add('wrong');
+    }else if(userAns===letter){div.classList.add('selected');}
+    div.innerHTML='<div class="choice-letter">'+letter+'</div><div class="choice-text">'+choice.substring(3)+'</div>';
+    if(!answered[currentQ]){
+      (function(l){div.addEventListener('click',function(){selectAnswer(l);});})(letter);
     }
+    choicesEl.appendChild(div);
+  });
+  if(answered[currentQ]){
+    var correct=answers[currentQ]===q.a;
+    fb.className='feedback '+(correct?'correct-fb':'wrong-fb');
+    fb.textContent=correct?'✓ Correct!':'✗ Wrong. The correct answer is '+q.a+'.';
+  }
+  document.getElementById('prevBtn').disabled=currentQ===0;
+  document.getElementById('nextBtn').textContent=currentQ===TESTS[currentTest].questions.length-1?'Finish ✓':'Next →';
+}
 
-    function renderQ() {
-      const qData = TESTS[currentTest].questions[currentQ];
-      const total = TESTS[currentTest].questions.length;
-      document.getElementById('quizSub').textContent = ⁠ Q${currentQ + 1} of ${total} ⁠;
-      document.getElementById('qMeta').textContent = ⁠ Question ${currentQ + 1} ⁠;
-      document.getElementById('qText').textContent = qData.q;
-      document.getElementById('progressBar').style.width = ⁠ ${((currentQ + 1) / total) * 100}% ⁠;
-      const opts = [
-        { key: 'a', text: qData.a },
-        { key: 'b', text: qData.b },
-        { key: 'c', text: qData.c },
-        { key: 'd', text: qData.d }
-      ];
-      const container = document.getElementById('optionsContainer');
-      container.innerHTML = '';
-      opts.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'opt-btn';
-        if (answered[currentQ]) {
-          btn.disabled = true;
-          if (opt.key === qData.ans) btn.classList.add('correct');
-          else if (answers[currentQ] === opt.key) btn.classList.add('wrong');
-        } else {
-          btn.onclick = () => selectAnswer(opt.key);
-        }
-        btn.innerHTML = ⁠ <span class="opt-letter">${opt.key.toUpperCase()}</span><span>${opt.text}</span> ⁠;
-        container.appendChild(btn);
-      });
-      document.getElementById('prevBtn').disabled = currentQ === 0;
-      document.getElementById('nextBtn').textContent = currentQ === total - 1 ? 'Finish →' : 'Next →';
-    }
+function selectAnswer(letter){
+  if(answered[currentQ])return;
+  answers[currentQ]=letter;answered[currentQ]=true;renderQ();
+}
 
-    function selectAnswer(letter) {
-      if (answered[currentQ]) return;
-      answers[currentQ] = letter;
-      answered[currentQ] = true;
-      renderQ();
-    }
+function nextQ(){
+  if(!answered[currentQ]){alert('Please choose an answer first.');return;}
+  if(currentQ<TESTS[currentTest].questions.length-1){currentQ++;renderQ();}
+  else{showResults();}
+}
 
-    function nextQ() {
-      const total = TESTS[currentTest].questions.length;
-      if (!answered[currentQ]) {
-        alert('Please select an answer before moving forward.');
-        return;
-      }
-      if (currentQ < total - 1) {
-        currentQ++;
-        renderQ();
-      } else {
-        showResults();
-      }
-    }
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
 
-    function prevQ() {
-      if (currentQ > 0) {
-        currentQ--;
-        renderQ();
-      }
-    }
+function showResults(){
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('results').style.display='block';
+  var test=TESTS[currentTest];var score=0;
+  answers.forEach(function(a,i){if(a===test.questions[i].a)score++;});
+  var pass=score>=24;
+  document.getElementById('resultEmoji').textContent=pass?'🎯':'📚';
+  document.getElementById('resultScore').textContent=score+'/30';
+  document.getElementById('resultScore').className='result-score '+(pass?'pass':'fail');
+  var badge=document.getElementById('resultBadge');
+  badge.textContent=pass?'✅ PASSED':'❌ NOT PASSED';
+  badge.className='result-badge '+(pass?'pass':'fail');
+  document.getElementById('resultMsg').textContent=pass?'Excellent! You scored '+score+' out of 30. Keep it up!':'You scored '+score+' out of 30. You need 24 to pass. Review your mistakes and try again!';
+  var reviewList=document.getElementById('reviewList');
+  var wrongs=answers.map(function(a,i){return{i:i,a:a,correct:a===test.questions[i].a,q:test.questions[i]};}).filter(function(x){return!x.correct;});
+  if(wrongs.length===0){
+    reviewList.innerHTML='<h3>Review</h3><p style="color:var(--green);font-size:14px;padding:10px 0">🎉 Perfect score! No mistakes.</p>';
+  }else{
+    reviewList.innerHTML='<h3>Mistakes to Review ('+wrongs.length+')</h3>'+wrongs.map(function(w){
+      return'<div class="review-item"><span class="review-icon">❌</span><div class="review-q">Q'+(w.i+1)+': '+w.q.q+'</div><div class="review-ans wrong">You: '+(w.a||'—')+' | Correct: <span class="correct-ans">'+w.q.a+'</span></div></div>';
+    }).join('');
+  }
+}
 
-    function showResults() {
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('results').style.display = 'block';
-      const qList = TESTS[currentTest].questions;
-      let score = 0;
-      const wrongs = [];
-      qList.forEach((q, i) => {
-        if (answers[i] === q.ans) score++;
-        else wrongs.push({ idx: i + 1, q: q.q, userAns: answers[i], correctAns: q.ans, correctText: q[q.ans] });
-      });
-      const pass = score >= 24;
-      document.getElementById('resultScore').textContent = score;
-      const badge = document.getElementById('resultBadge');
-      badge.textContent = pass ? 'PASSED' : 'NOT PASSED';
-      badge.className = ⁠ result-badge ${pass ? 'pass' : 'fail'} ⁠;
-      document.getElementById('resultMsg').textContent = pass
-        ? 'Excellent! You reached the passing score for Book 7.'
-        : 'Keep practicing! Review your mistakes below and try again.';
-      document.getElementById('resultEmoji').textContent = pass ? '🎉' : '📚';
-      const rList = document.getElementById('reviewList');
-      if (wrongs.length === 0) {
-        rList.innerHTML = '<h3>Review</h3><p style="color:var(--green);font-size:14px;">Perfect score! No mistakes.</p>';
-      } else {
-        rList.innerHTML = ⁠ <h3>Mistakes to Review (${wrongs.length})</h3> ⁠ +
-          wrongs.map(w => `
-            <div class="review-item">
-              <span class="review-icon">❌</span>
-              <div class="review-q"><b>Q${w.idx}:</b> ${w.q}<br>
-                <span class="review-ans wrong">Your answer: ${w.userAns ? w.userAns.toUpperCase() : 'None'}</span> | 
-                <span class="review-ans correct">Correct: ${w.correctAns.toUpperCase()} (${w.correctText})</span>
-              </div>
-            </div>
-          `).join('');
-      }
-    }
-
-    function retryTest() { startTest(currentTest); }
-    function backToSelector() {
-      document.getElementById('selector').style.display = 'block';
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('results').style.display = 'none';
-    }
-  </script>
+function backToSelector(){
+  document.getElementById('selector').style.display='block';
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('results').style.display='none';
+}
+</script>
 </body>
 </html>
